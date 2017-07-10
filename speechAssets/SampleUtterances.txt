@@ -1,0 +1,5 @@
+OrderTowelIntent I'd like to order a towel
+OrderTowelIntent towel
+OrderTowelIntent bring me a towel
+OrderTowelIntent please bring me a towel
+OrderTowelIntent I want a towel

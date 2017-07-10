@@ -1,0 +1,25 @@
+{
+  "intents": [
+    {
+      "intent": "OrderTowelIntent"
+    },
+    {
+      "intent": "TowelNumberIntent",
+      "slots":[
+        {
+          "name":"towelNumber",
+          "type":"AMAZON.number"
+        }
+      ]
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    }
+  ]
+}
