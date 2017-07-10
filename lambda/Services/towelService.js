@@ -1,19 +1,21 @@
 'use strict';
-Object.defineProperty(exports, "__esModule", { value: true });
-const AWS = require("aws-sdk");
-let sns = new AWS.SNS();
-class TowelService {
-    sendAlert(message, topic, callback) {
-        let params = {
+exports.__esModule = true;
+var AWS = require("aws-sdk");
+var sns = new AWS.SNS();
+var TowelService = (function () {
+    function TowelService() {
+    }
+    TowelService.prototype.sendAlert = function (message, topic, callback) {
+        var params = {
             Message: message,
             TopicArn: topic
         };
-        let request = sns.publish(params);
-        console.info("This is our request:" + request);
+        var request = sns.publish(params);
+        console.info("This is our request:" + JSON.stringify(request));
         request.send(callback);
         return;
-    }
-}
+    };
+    return TowelService;
+}());
 exports.TowelService = TowelService;
 exports.towelService = new TowelService();
-//# sourceMappingURL=towelService.js.map

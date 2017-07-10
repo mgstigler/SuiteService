@@ -1,23 +1,23 @@
 'use strict';
-Object.defineProperty(exports, "__esModule", { value: true });
-const AWS = require("aws-sdk");
-module.exports.CreateRoom = (event, context, callback) => {
+exports.__esModule = true;
+var AWS = require("aws-sdk");
+module.exports.CreateRoom = function (event, context, callback) {
     console.info("Received event: ", JSON.stringify(event, null, 2));
-    let docClient = new AWS.DynamoDB.DocumentClient();
-    let table = "HotelGuests";
-    let params = {
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    var table = "Guests";
+    var params = {
         TableName: table,
         Item: {
-            "RoomNumber": event.RoomNumber,
-            "AlexaId": event.AlexaId
+            "AlexaId": event.AlexaId,
+            "RoomNumber": event.RoomNumber
         }
     };
-    let response = {
+    var response = {
         statusCode: 200,
         message: ""
     };
     console.log("Adding a new item...");
-    docClient.put(params, (err, data) => {
+    docClient.put(params, function (err, data) {
         if (err) {
             response.statusCode = 500;
             console.error("Unable to create Room. Error JSON:", JSON.stringify(err, null, 2));
@@ -35,4 +35,3 @@ module.exports.CreateRoom = (event, context, callback) => {
         }
     });
 };
-//# sourceMappingURL=handler.js.map

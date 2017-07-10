@@ -7,19 +7,20 @@ module.exports.UpdateRoom = (event: RoomModel, context, callback) => {
 
     let docClient = new AWS.DynamoDB.DocumentClient()
 
-    let table = "HotelGuests";
+    let table = "Guests";
 
     // Update the item, unconditionally,
 
     let params = {
         TableName:table,
         Key:{
-            "RoomNumber": event.RoomNumber
+            "AlexaId": event.AlexaId
         },
-        UpdateExpression: "set FName = :f, LName = :l",
+        UpdateExpression: "set FName = :f, LName = :l, RoomNumber = :r",
         ExpressionAttributeValues:{
             ":f": event.FName,
-            ":l": event.LName
+            ":l": event.LName,
+            ":r": event.RoomNumber
         },
         ReturnValues:"UPDATED_NEW"
     };
@@ -34,7 +35,7 @@ module.exports.UpdateRoom = (event: RoomModel, context, callback) => {
         if (err) {
             response.statusCode = 500;
             console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
-            response.message = "Unable to update " + event.RoomNumber;
+            response.message = "Unable to update room";
             callback(null, response);
         } else {
             console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));

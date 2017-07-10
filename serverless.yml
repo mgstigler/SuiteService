@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: SuiteServiceSkill
+service: SuiteServiceSkillMaddie
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -63,7 +63,7 @@ package:
 
 
 functions:
-  SuiteService:
+  suiteService:
     handler: lambda/handler.SuiteService
     events: 
       - alexaSkill
@@ -73,6 +73,41 @@ functions:
         - lambda/Services/towelService.js
         - node_modules/**
 
+  getRoom:
+      handler: RoomRegistration/GetRoom/handler.GetRoom
+      events: 
+        - http:
+            path: room
+            method: get
+      package:
+        include:
+          - RoomRegistration/GetRoom/handler.js
+          - RoomRegistration/Shared/Models/roomModel.js
+          - node_modules/**
+
+  createRoom:
+      handler: RoomRegistration/CreateRoom/handler.CreateRoom
+      events: 
+        - http:
+            path: room
+            method: put
+      package:
+        include:
+          - RoomRegistration/CreateRoom/handler.js
+          - RoomRegistration/Shared/Models/roomModel.js
+          - node_modules/**
+
+  updateRoom:
+      handler: RoomRegistration/UpdateRoom/handler.UpdateRoom
+      events: 
+        - http:
+            path: room
+            method: post
+      package:
+        include:
+          - RoomRegistration/UpdateRoom/handler.js
+          - RoomRegistration/Shared/Models/roomModel.js
+          - node_modules/**
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

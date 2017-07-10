@@ -1,24 +1,25 @@
 'use strict';
-Object.defineProperty(exports, "__esModule", { value: true });
-const AWS = require("aws-sdk");
-module.exports.UpdateRoom = (event, context, callback) => {
+exports.__esModule = true;
+var AWS = require("aws-sdk");
+module.exports.UpdateRoom = function (event, context, callback) {
     console.info("Received event: ", JSON.stringify(event, null, 2));
-    let docClient = new AWS.DynamoDB.DocumentClient();
-    let table = "HotelGuests";
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    var table = "Guests";
     // Update the item, unconditionally,
-    let params = {
+    var params = {
         TableName: table,
         Key: {
-            "RoomNumber": event.RoomNumber
+            "AlexaId": event.AlexaId
         },
-        UpdateExpression: "set FName = :f, LName = :l",
+        UpdateExpression: "set FName = :f, LName = :l, RoomNumber = :r",
         ExpressionAttributeValues: {
             ":f": event.FName,
-            ":l": event.LName
+            ":l": event.LName,
+            ":r": event.RoomNumber
         },
         ReturnValues: "UPDATED_NEW"
     };
-    let response = {
+    var response = {
         statusCode: 200,
         message: ""
     };
@@ -27,7 +28,7 @@ module.exports.UpdateRoom = (event, context, callback) => {
         if (err) {
             response.statusCode = 500;
             console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
-            response.message = "Unable to update " + event.RoomNumber;
+            response.message = "Unable to update room";
             callback(null, response);
         }
         else {
@@ -37,4 +38,3 @@ module.exports.UpdateRoom = (event, context, callback) => {
         }
     });
 };
-//# sourceMappingURL=handler.js.map

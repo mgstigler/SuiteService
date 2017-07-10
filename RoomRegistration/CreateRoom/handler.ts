@@ -8,13 +8,13 @@ module.exports.CreateRoom = (event: RoomModel, context, callback) => {
 
     let docClient = new AWS.DynamoDB.DocumentClient();
 
-    let table = "HotelGuests";
+    let table = "Guests";
 
     let params = {
         TableName:table,
         Item:{
-            "RoomNumber": event.RoomNumber,
-            "AlexaId": event.AlexaId
+            "AlexaId": event.AlexaId,
+            "RoomNumber": event.RoomNumber
         }
     };
 

@@ -1,31 +1,31 @@
 'use strict';
-Object.defineProperty(exports, "__esModule", { value: true });
-const AWS = require("aws-sdk");
-module.exports.GetRoom = (event, context, callback) => {
+exports.__esModule = true;
+var AWS = require("aws-sdk");
+module.exports.GetRoom = function (event, context, callback) {
     console.info("Received event: ", JSON.stringify(event, null, 2));
-    let docClient = new AWS.DynamoDB.DocumentClient();
-    let table = "HotelGuests";
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    var table = "Guests";
     console.info(event);
-    let response = {
+    var response = {
         statusCode: 200,
         message: ""
     };
-    let params = {
+    var params = {
         TableName: table,
         Key: {
-            "RoomNumber": event.RoomNumber
+            "AlexaId": event.AlexaId
         }
     };
     docClient.get(params, function (err, data) {
         if (err) {
             console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
             response.statusCode = 500;
-            response.message = "Cannot find room " + event.RoomNumber;
+            response.message = "Cannot find room for " + event.AlexaId;
             callback(null, response);
         }
         else if (data.Item == null) {
             response.statusCode = 404;
-            response.message = "Cannot find room " + event.RoomNumber;
+            response.message = "Cannot find room for " + event.AlexaId;
             callback(null, response);
         }
         else {
@@ -35,4 +35,3 @@ module.exports.GetRoom = (event, context, callback) => {
         }
     });
 };
-//# sourceMappingURL=handler.js.map
