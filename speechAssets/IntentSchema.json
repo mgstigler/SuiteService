@@ -1,14 +1,24 @@
 {
   "intents": [
     {
-      "intent": "OrderTowelIntent"
+      "intent": "RequestSingularServiceIntent",
+      "slots": [
+        {
+          "name": "requestedSingularService",
+          "type": "LIST_OF_SERVICES"
+        }
+      ]
     },
     {
-      "intent": "TowelNumberIntent",
+      "intent": "RequestedPluralServiceIntent",
       "slots":[
         {
-          "name":"towelNumber",
+          "name":"requestNumber",
           "type":"AMAZON.number"
+        }
+        {
+          "name": "requestedPluralService",
+          "type": "LIST_OF_SERVICES"
         }
       ]
     },

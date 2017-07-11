@@ -4,20 +4,26 @@ const Alexa = require("alexa-sdk");
 const towelService_1 = require("./Services/towelService");
 module.exports.SuiteService = (event, context, callback) => {
     let alexa = Alexa.handler(event, context, callback);
-    alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
+    //alexa.appId = "amzn1.ask.skill.117130a7-6610-4832-8b8c-04e38f10d840";
     alexa.registerHandlers(handlers);
     alexa.execute();
 };
 let handlers = {
     //Handles the launch request
     'LaunchRequest': function () {
-        this.emit(':ask', 'Welcome to Hotel Service!', 'Try saying food service.');
+        this.emit(':ask', 'Welcome to Hotel Service!');
     },
-    'OrderTowelIntent': function () {
-        let message = "Please send towels to Laura.";
+    'RequestSingularServiceIntent': function () {
+        let message = "Please send " + this.event.request.intent.slots.RequestSingularServiceIntent.value + " to Laura.";
         let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
         towelService_1.towelService.sendAlert(message, topic, null);
-        this.emit(':ask', 'Of course. We will send a set of towels to your room right away. Do you need anything else?', 'Try saying I would like order something else.');
+        this.emit(':ask', 'Of course. We will send ' + this.event.request.intent.slots.requestnumber.value + " " + this.event.request.intent.slots.requestedPluralService.value + ' to your room right away');
+    },
+    'RequestedPluralServiceIntent': function () {
+        let message = "Please send " + this.event.request.intent.slots.requestNumber.value + " " + this.event.request.intent.slots.requestedPluralService.value + "  to Laura.";
+        let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
+        towelService_1.towelService.sendAlert(message, topic, null);
+        this.emit(':ask', 'Of course. We will send ' + this.event.request.intent.slots.requestNumber.value + " " + this.event.request.intent.slots.requestedPluralService.value  + ' to your room right away.')  
     },
     'AMAZON.StopIntent': function () {
         // State Automatically Saved with :tell

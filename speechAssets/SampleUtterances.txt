@@ -1,5 +1,15 @@
-OrderTowelIntent I'd like to order a towel
-OrderTowelIntent towel
-OrderTowelIntent bring me a towel
-OrderTowelIntent please bring me a towel
-OrderTowelIntent I want a towel
+RequestServiceIntent I'd like to order {requestedSingularService}
+RequestServiceIntent {requestedSingularService}
+RequestServiceIntent bring me {requestedSingularService}
+RequestServiceIntent please bring me {requestedSingularService}
+RequestServiceIntent I want {requestedSingularService}
+RequestServiceIntent I need {requestedSingularService}
+
+TowelNumberIntent I'd like to order {requestNumber} {requestedPluralService}
+TowelNumberIntent Send me {requestNumber} {requestedPluralService}
+RequestServiceIntent I'd like to order {requestNumber} {requestedPluralService}
+RequestServiceIntent {requestNumber} {requestedPluralService}
+RequestServiceIntent bring me {requestNumber} {requestedPluralService}
+RequestServiceIntent please bring me {requestNumber} {requestedPluralService}
+RequestServiceIntent I want {requestNumber} {requestedPluralService}
+RequestServiceIntent I need {requestNumber} {requestedPluralService}

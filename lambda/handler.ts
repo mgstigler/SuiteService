@@ -3,7 +3,7 @@ import {towelService} from './Services/towelService';
 
 module.exports.SuiteService = (event, context, callback) => {
   let alexa = Alexa.handler(event, context, callback);
-  alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
+  alexa.appId = "amzn1.ask.skill.117130a7-6610-4832-8b8c-04e38f10d840";
   alexa.registerHandlers(handlers);
   alexa.execute();
 };
