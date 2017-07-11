@@ -1,5 +1,6 @@
 import * as Alexa from 'alexa-sdk';
 import {towelService} from './Services/towelService';
+import {guestService} from './Services/guestService';
 
 module.exports.SuiteService = (event, context, callback) => {
   let alexa = Alexa.handler(event, context, callback);
@@ -17,7 +18,7 @@ let handlers = {
   },
 
   'OrderTowelIntent': function () {
-    let message = "Please send towels to Laura.";
+    let message = "Please send towels to Room.";
     let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
     towelService.sendAlert(message, topic, null);
     this.emit(':ask', 'Of course. We will send a set of towels to your room right away. Do you need anything else?', 'Try saying I would like order something else.');
