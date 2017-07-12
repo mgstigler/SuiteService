@@ -14,16 +14,24 @@ let handlers = {
         this.emit(':ask', 'Welcome to Hotel Service!');
     },
     'RequestSingularServiceIntent': function () {
-        let message = "Please send " + this.event.request.intent.slots.RequestSingularServiceIntent.value + " to Laura.";
+        let service = this.event.request.intent.slots.requestedSingularService.value;
+        let message = "Please send " + service + " to Laura.";
         let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
         towelService_1.towelService.sendAlert(message, topic, null);
-        this.emit(':ask', 'Of course. We will send ' + this.event.request.intent.slots.requestnumber.value + " " + this.event.request.intent.slots.requestedPluralService.value + ' to your room right away');
+        this.emit(':ask', 'Of course. We will send ' + service + ' to your room right away');
     },
     'RequestedPluralServiceIntent': function () {
-        let message = "Please send " + this.event.request.intent.slots.requestNumber.value + " " + this.event.request.intent.slots.requestedPluralService.value + "  to Laura.";
+        let number = this.event.request.intent.slots.requestNumber.value;
+        let service = this.event.request.intent.slots.requestedPluralService.value;
+        let message = "Please send " + number + service + "  to Laura.";
         let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
-        towelService_1.towelService.sendAlert(message, topic, null);
-        this.emit(':ask', 'Of course. We will send ' + this.event.request.intent.slots.requestNumber.value + " " + this.event.request.intent.slots.requestedPluralService.value  + ' to your room right away.')  
+        //towelService_1.towelService.sendAlert(message, topic, null);
+        this.emit(':confirmSlot', "requestNumber", "Did you say" + number + service, "reprompt", this.event.request.intent); 
+        if (JSON.stringify(this.event.request.intent.slots.requestNumber.confirmationStatus) == "CONFIRMED" ) {
+            towelService_1.towelService.sendAlert(message, topic, null);
+            this.emit(':ask', 'Great. We will send ' + number + service + ' to your room right away')
+        }
+        console.log(JSON.stringify(this.event));
     },
     'AMAZON.StopIntent': function () {
         // State Automatically Saved with :tell
