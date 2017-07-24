@@ -16,11 +16,12 @@ module.exports.UpdateRoom = (event: RoomModel, context, callback) => {
         Key:{
             "AlexaId": event.AlexaId
         },
-        UpdateExpression: "set FName = :f, LName = :l, RoomNumber = :r",
+        UpdateExpression: "set FName = :f, LName = :l, RoomNumber = :r, PhoneNumber = :p",
         ExpressionAttributeValues:{
             ":f": event.FName,
             ":l": event.LName,
-            ":r": event.RoomNumber
+            ":r": event.RoomNumber,
+            ":p": event.PhoneNumber
         },
         ReturnValues:"UPDATED_NEW"
     };

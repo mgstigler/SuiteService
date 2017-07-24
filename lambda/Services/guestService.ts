@@ -23,7 +23,6 @@ export class GuestService {
                         throw new Error(JSON.stringify(parsedData.error));
                     }
                     else {
-                        console.info("HERE");
                         callback(result);
                     }
                 }
