@@ -3,3 +3,19 @@ OrderTowelIntent towel
 OrderTowelIntent bring me a towel
 OrderTowelIntent please bring me a towel
 OrderTowelIntent I want a towel
+
+FoodServiceIntent I'd like a {foodItem}
+FoodServiceIntent Send me a {foodItem}
+FoodServiceIntent I'd like some {foodItem}
+FoodServiceIntent Send me some {foodItem}
+FoodServiceIntent Can I get a {foodItem}
+FoodServiceIntent Can I get some {foodItem}
+FoodServiceIntent Bring me a {foodItem}
+FoodServiceIntent Bring me some {foodItem}
+FoodServiceIntent Please bring me a {foodItem}
+FoodServiceIntent Please bring me some {foodItem}
+FoodServiceIntent {foodItem} please
+FoodServiceIntent Can I see a menu
+FoodServiceIntent I want a menu
+FoodServiceIntent I'd like to order food
+FoodServiceIntent I'd like to order room service

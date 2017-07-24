@@ -13,6 +13,15 @@
       ]
     },
     {
+      "intent": "FoodServiceIntent",
+      "slots":[
+        {
+          "name":"foodItem",
+          "type":"AMAZON.Food"
+        }
+      ]
+    },
+    {
       "intent": "AMAZON.StopIntent"
     },
     {
