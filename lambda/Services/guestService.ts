@@ -1,34 +1,39 @@
 'use strict';
 import * as AWS from "aws-sdk";
 import * as querystring from "querystring";
+import {guestModel} from "../Models/guestModel";
+let https = require("https");
 
 
 export class GuestService {
 
     getGuestInformation(deviceId: String, callback) {
-        let docClient = new AWS.DynamoDB.DocumentClient()
-        let table = "Guests";
-
-        let params = {
-            TableName: table,
-            Key:{
-                "AlexaId": deviceId
-            }
-        };
-
-        docClient.get(params, function(err, data) {
-            if (err) {
-                console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
-                callback(null);
-            } else if (data.Item == null) {
-                callback(null);
-            }else{
-                console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
-                callback(null);
-                return data;
-            }
+        let parsedData = null;
+        let url =  'https://plocf3fmt2.execute-api.us-east-1.amazonaws.com/dev/room?AlexaId=' + deviceId;
+        https.get(url, (response) => {
+            console.info("Response is, Response Status Code: " + response.statusCode + ", Response Message: " + response.statusMessage);
+            let rawData = "";
+            response.on('data', (chunk) => rawData += chunk);
+            response.on('end', () => {
+                try {
+                    let parsedData = JSON.parse(rawData);
+                    let result = parsedData.data.Item;
+                    console.info("PD: " + JSON.stringify(parsedData.data.Item));
+                    if (parsedData.error) {
+                        throw new Error(JSON.stringify(parsedData.error));
+                    }
+                    else {
+                        console.info("HERE");
+                        callback(result);
+                    }
+                }
+                catch (e) {
+                    console.error(e);
+                }
+            });
+        }).on('error', (e) => {
+            console.error(e);
         });
-        
     }
     
 }

@@ -1,11 +1,14 @@
 import * as Alexa from 'alexa-sdk';
 import {towelService} from './Services/towelService';
 import {guestService} from './Services/guestService';
+let deviceId = null;
 
 module.exports.SuiteService = (event, context, callback) => {
   let alexa = Alexa.handler(event, context, callback);
-  alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
-  let deviceId = context.System.device.deviceId;
+  // alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
+  // Uncomment when using actual device
+  deviceId = event.context.System.device.deviceId;
+  console.info(deviceId);
   alexa.registerHandlers(handlers);
   alexa.execute();
 };
@@ -18,10 +21,16 @@ let handlers = {
   },
 
   'OrderTowelIntent': function () {
-    let message = "Please send towels to Room.";
-    let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
-    towelService.sendAlert(message, topic, null);
-    this.emit(':ask', 'Of course. We will send a set of towels to your room right away. Do you need anything else?', 'Try saying I would like order something else.');
+
+    guestService.getGuestInformation(deviceId, guestInfo =>{
+      console.info("Guest " + guestInfo);
+      let roomNumber= JSON.stringify(guestInfo.RoomNumber);
+      let guestName = JSON.stringify(guestInfo.FName);
+      let message = "Please send towels to Room " + roomNumber;
+      let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";   
+      // towelService.sendAlert(message, topic, null);
+      this.emit(':ask', 'Of course. We will send a set of towels to your room right away ' + guestName + '. Do you need anything else?', 'Try saying I would like order something else.');
+    });
   },
 
   'AMAZON.StopIntent': function () {

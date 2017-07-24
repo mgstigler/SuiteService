@@ -1,12 +1,12 @@
 'use strict';
-exports.__esModule = true;
-var AWS = require("aws-sdk");
-module.exports.UpdateRoom = function (event, context, callback) {
+Object.defineProperty(exports, "__esModule", { value: true });
+const AWS = require("aws-sdk");
+module.exports.UpdateRoom = (event, context, callback) => {
     console.info("Received event: ", JSON.stringify(event, null, 2));
-    var docClient = new AWS.DynamoDB.DocumentClient();
-    var table = "Guests";
+    let docClient = new AWS.DynamoDB.DocumentClient();
+    let table = "Guests";
     // Update the item, unconditionally,
-    var params = {
+    let params = {
         TableName: table,
         Key: {
             "AlexaId": event.AlexaId
@@ -19,7 +19,7 @@ module.exports.UpdateRoom = function (event, context, callback) {
         },
         ReturnValues: "UPDATED_NEW"
     };
-    var response = {
+    let response = {
         statusCode: 200,
         message: ""
     };
@@ -33,8 +33,10 @@ module.exports.UpdateRoom = function (event, context, callback) {
         }
         else {
             console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+            response.statusCode = 200;
             response.message = "Updated room with " + event.FName + " " + event.LName + " successfully.";
             callback(null, response);
         }
     });
 };
+//# sourceMappingURL=handler.js.map

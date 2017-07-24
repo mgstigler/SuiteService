@@ -1,34 +1,36 @@
 'use strict';
-exports.__esModule = true;
-var AWS = require("aws-sdk");
-var GuestService = (function () {
-    function GuestService() {
-    }
-    GuestService.prototype.getGuestInformation = function (deviceId, callback) {
-        var docClient = new AWS.DynamoDB.DocumentClient();
-        var table = "Guests";
-        var params = {
-            TableName: table,
-            Key: {
-                "AlexaId": deviceId
-            }
-        };
-        docClient.get(params, function (err, data) {
-            if (err) {
-                console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
-                callback(null);
-            }
-            else if (data.Item == null) {
-                callback(null);
-            }
-            else {
-                console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
-                callback(null);
-                return data;
-            }
+Object.defineProperty(exports, "__esModule", { value: true });
+let https = require("https");
+class GuestService {
+    getGuestInformation(deviceId, callback) {
+        let parsedData = null;
+        let url = 'https://plocf3fmt2.execute-api.us-east-1.amazonaws.com/dev/room?AlexaId=' + deviceId;
+        https.get(url, (response) => {
+            console.info("Response is, Response Status Code: " + response.statusCode + ", Response Message: " + response.statusMessage);
+            let rawData = "";
+            response.on('data', (chunk) => rawData += chunk);
+            response.on('end', () => {
+                try {
+                    let parsedData = JSON.parse(rawData);
+                    let result = parsedData.data.Item;
+                    console.info("PD: " + JSON.stringify(parsedData.data.Item));
+                    if (parsedData.error) {
+                        throw new Error(JSON.stringify(parsedData.error));
+                    }
+                    else {
+                        console.info("HERE");
+                        callback(result);
+                    }
+                }
+                catch (e) {
+                    console.error(e);
+                }
+            });
+        }).on('error', (e) => {
+            console.error(e);
         });
-    };
-    return GuestService;
-}());
+    }
+}
 exports.GuestService = GuestService;
 exports.guestService = new GuestService();
+//# sourceMappingURL=guestService.js.map

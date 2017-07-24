@@ -36,6 +36,7 @@ module.exports.CreateRoom = (event: RoomModel, context, callback) => {
             response.message = "Unable to create Room " + event.RoomNumber;
             callback(null, response);
         } else {
+            response.statusCode = 200;
             response.message = "Created Room " + event.RoomNumber + " succeeded.";
             callback(null, response);
         }

@@ -39,6 +39,7 @@ module.exports.UpdateRoom = (event: RoomModel, context, callback) => {
             callback(null, response);
         } else {
             console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+            response.statusCode = 200;
             response.message = "Updated room with " + event.FName +  " " + event.LName + " successfully.";
             callback(null, response);
         }
