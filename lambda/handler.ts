@@ -1,5 +1,5 @@
 import * as Alexa from 'alexa-sdk';
-import {towelService} from './Services/towelService';
+import {alertService} from './Services/alertService';
 import {guestService} from './Services/guestService';
 import {foodService} from './Services/foodService';
 let deviceId = null;
@@ -8,10 +8,11 @@ let cardTitle = '';
 let cardContent = '';
 let bucketPath = "https://s3.amazonaws.com/food-menu-images/";
 
+
 module.exports.SuiteService = (event, context, callback) => {
   let alexa = Alexa.handler(event, context, callback);
   // alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
-  // Uncomment when using actual device
+  // Uncomment below when testing with an actual device
   // deviceId = event.context.System.device.deviceId;
   deviceId = "amzn1.ask.device.AEDESKFZ4SBJNWU3M7EXRX7NJL5DTLKLAP2KRVBKYQ5PYRNQRUWZBSUKWWWW4DDJOCZE3WC2XBWJHQJ4PVMN5HBHLY4UHSK5W76VCAJ5L7NNSIRNHHSTG5WA66NRWQCWJ22R2LGSICQHW2SFNV6V3EIVVCUA";
   console.info(deviceId);
@@ -32,7 +33,7 @@ let handlers = {
   'OrderTowelIntent': function () {
     let message = "Please send towels to Room " + guestInformation.RoomNumber;
     let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";   
-    // towelService.sendAlert(message, topic, null);
+    // alertService.sendAlert(message, topic, null);
     this.emit(':ask', 'Of course. We will send a set of towels to your room right away ' + JSON.stringify(guestInformation.FName) + '. Do you need anything else?', 'Try saying I would like order something else.');
   },
 
@@ -42,7 +43,7 @@ let handlers = {
         console.info("Food Info: " + JSON.stringify(foodInfo.Index) );
         let message = "Please send " + food + " to Room " + guestInformation.RoomNumber;
         let topic = "arn:aws:sns:us-east-1:202274289241:TowelService"; 
-        // towelService.sendAlert(message, topic, null);
+        // alertService.sendAlert(message, topic, null);
         foodService.updateRating(foodInfo);
         var imageObj = {
           						    smallImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg',
@@ -50,12 +51,16 @@ let handlers = {
           						};
                     	cardTitle = JSON.stringify(foodInfo.FoodItem);
                     	cardContent = "Rating: " + JSON.stringify(foodInfo.Rating);
-        this.emit(':askWithCard', 'Sending ' + food + ' your way, ' + guestInformation.FName, cardTitle, cardContent, imageObj);
+        this.emit(':askWithCard', 'We are sending ' + food + ' your way, ' + guestInformation.FName, cardTitle, cardContent, imageObj);
       });
   },
 
   'MenuIntent': function() {
-      this.emit(':ask', 'Reading menu items now');
+      foodService.getMenu(menu => {
+        cardTitle = menu.speech + ' Menu';
+        cardContent = menu.items.join(", and ");
+        this.emit(':askWithCard', 'We are serving ' + menu.speech + ' now.  This includes ' + menu.items.join(", and ") + '. What can I get for you?', cardTitle, cardContent);
+      })
   },
 
   'AMAZON.StopIntent': function () {

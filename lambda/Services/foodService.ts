@@ -57,6 +57,60 @@ export class FoodService {
         });
     }
 
+    getMenu(callback) {
+        let date = new Date();
+        let currentHour = date.getHours();
+        let Menu = {
+            speech: '',
+            items: []
+        };
+        if(currentHour > 17) {
+            Menu.speech = 'Dinner, Late Night, and Dessert';
+            this.getItemsByMenu('Dinner', 'Late Night', 'Dessert', response => {
+                Menu.items = response;
+                callback(Menu);
+            });
+        }
+        else if (currentHour > 11) {
+            Menu.speech = 'Lunch and Dessert';
+            this.getItemsByMenu('Lunch', 'Dessert', null, response => {
+                Menu.items = response;
+                callback(Menu);
+            });
+        }
+        else {
+            Menu.speech = 'Breakfast';
+            this.getItemsByMenu('Breakfast', null, null, response => {
+                Menu.items = response;
+                callback(Menu);
+            });
+        }
+    }
+
+    getItemsByMenu(menu1, menu2, menu3, callback) {
+        let response = [];
+        let params = {
+            TableName: table
+        }
+        console.log("Scanning table.");
+        docClient.scan(params, onScan); 
+        function onScan(err, data) {
+            if (err) {
+                console.error("Unable to scan the table. Error JSON:", JSON.stringify(err, null, 2));
+            } else {
+                console.log("Scan succeeded.");
+                data.Items.forEach(function(item) {
+                    if(item.Menu.values.includes(menu1) || item.Menu.values.includes(menu2) || item.Menu.values.includes(menu3)) {
+                        console.info(JSON.stringify(item.FoodItem));
+                        response.push(item.FoodItem);
+                    }
+                });
+                console.info(response);
+                callback(response);
+            }
+        }
+    };
+
 }
 
 export const foodService = new FoodService();
