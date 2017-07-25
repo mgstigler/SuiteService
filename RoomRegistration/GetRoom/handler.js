@@ -12,7 +12,7 @@ module.exports.GetRoom = (event, context, callback) => {
         data: null
     };
     let params = {
-        TableName: table,
+        TableName: "Guests",
         Key: {
             "AlexaId": event.AlexaId
         }

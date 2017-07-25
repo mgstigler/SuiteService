@@ -7,7 +7,7 @@ module.exports.UpdateRoom = (event, context, callback) => {
     let table = "Guests";
     // Update the item, unconditionally,
     let params = {
-        TableName: table,
+        TableName: "Guests",
         IndexName: "RoomNumber-index",
         KeyConditionExpression: "RoomNumber = :r",
         ExpressionAttributeValues: {
@@ -26,7 +26,7 @@ module.exports.UpdateRoom = (event, context, callback) => {
             console.log("Query succeeded.");
             data.Items.forEach(function (item) {
                 let params1 = {
-                    TableName: table,
+                    TableName: "Guests",
                     Key: {
                         "AlexaId": item.AlexaId
                     },

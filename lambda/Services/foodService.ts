@@ -2,12 +2,11 @@
 import * as AWS from "aws-sdk";
 import {foodModel} from "../Models/foodModel";
 let docClient = new AWS.DynamoDB.DocumentClient()
-let table = "FoodService";
 
 export class FoodService {
     getFoodInformation(foodItem: string, callback) {
         let params = {
-            TableName: table,
+            TableName: "FoodService",
             IndexName: "FoodItem-index",
             KeyConditionExpression:"FoodItem = :f",
             ExpressionAttributeValues: {
@@ -37,7 +36,7 @@ export class FoodService {
 
     updateRating(foodItem: foodModel) {
         let params = {
-            TableName:table,
+            TableName:"FoodService",
             Key:{
                 "Index": foodItem.Index
             },
@@ -90,7 +89,7 @@ export class FoodService {
     getItemsByMenu(menu1, menu2, menu3, callback) {
         let response = [];
         let params = {
-            TableName: table
+            TableName: "FoodService"
         }
         console.log("Scanning table.");
         docClient.scan(params, onScan); 

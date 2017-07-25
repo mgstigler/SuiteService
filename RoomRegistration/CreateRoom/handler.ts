@@ -11,7 +11,7 @@ module.exports.CreateRoom = (event: RoomModel, context, callback) => {
     let table = "Guests";
 
     let params = {
-        TableName:table,
+        TableName:"Guests",
         Item:{
             "AlexaId": event.AlexaId,
             "RoomNumber": event.RoomNumber

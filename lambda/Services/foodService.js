@@ -2,11 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const AWS = require("aws-sdk");
 let docClient = new AWS.DynamoDB.DocumentClient();
-let table = "FoodService";
 class FoodService {
     getFoodInformation(foodItem, callback) {
         let params = {
-            TableName: table,
+            TableName: "FoodService",
             IndexName: "FoodItem-index",
             KeyConditionExpression: "FoodItem = :f",
             ExpressionAttributeValues: {
@@ -33,7 +32,7 @@ class FoodService {
     }
     updateRating(foodItem) {
         let params = {
-            TableName: table,
+            TableName: "FoodService",
             Key: {
                 "Index": foodItem.Index
             },
@@ -84,7 +83,7 @@ class FoodService {
     getItemsByMenu(menu1, menu2, menu3, callback) {
         let response = [];
         let params = {
-            TableName: table
+            TableName: "FoodService"
         };
         console.log("Scanning table.");
         docClient.scan(params, onScan);
