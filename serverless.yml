@@ -71,6 +71,7 @@ functions:
       include:
         - lambda/handler.js
         - lambda/Services/towelService.js
+        - lambda/Services/guestService.js
         - node_modules/**
 
   getRoom:
