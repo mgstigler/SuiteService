@@ -12,9 +12,9 @@ module.exports.SuiteService = (event, context, callback) => {
   console.info(deviceId);
   guestService.getGuestInformation(deviceId, guestInfo => {
     guestInformation = guestInfo;
+    alexa.registerHandlers(handlers);
+    alexa.execute();
   });
-  alexa.registerHandlers(handlers);
-  alexa.execute();
 };
 
 let handlers = {
