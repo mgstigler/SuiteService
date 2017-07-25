@@ -4,6 +4,9 @@ import {guestService} from './Services/guestService';
 import {foodService} from './Services/foodService';
 let deviceId = null;
 let guestInformation = null;
+let cardTitle = '';
+let cardContent = '';
+let bucketPath = "https://s3.amazonaws.com/food-menu-images/";
 
 module.exports.SuiteService = (event, context, callback) => {
   let alexa = Alexa.handler(event, context, callback);
@@ -37,9 +40,17 @@ let handlers = {
       let food = this.event.request.intent.slots.foodItem.value;
       foodService.getFoodInformation(food, foodInfo => {
         console.info("Food Info: " + JSON.stringify(foodInfo.Index) );
-        foodService.updateRating(foodInfo);
         let message = "Please send " + food + " to Room " + guestInformation.RoomNumber;
-        this.emit(':ask', 'Sending ' + food + ' your way, ' + guestInformation.FName);
+        let topic = "arn:aws:sns:us-east-1:202274289241:TowelService"; 
+        // towelService.sendAlert(message, topic, null);
+        foodService.updateRating(foodInfo);
+        var imageObj = {
+          						    smallImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg',
+          						    largeImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg'
+          						};
+                    	cardTitle = JSON.stringify(foodInfo.FoodItem);
+                    	cardContent = "Rating: " + JSON.stringify(foodInfo.Rating);
+        this.emit(':askWithCard', 'Sending ' + food + ' your way, ' + guestInformation.FName, cardTitle, cardContent, imageObj);
       });
   },
 
