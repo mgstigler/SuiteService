@@ -2,13 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Alexa = require("alexa-sdk");
 const guestService_1 = require("./Services/guestService");
+const foodService_1 = require("./Services/foodService");
 let deviceId = null;
 let guestInformation = null;
 module.exports.SuiteService = (event, context, callback) => {
     let alexa = Alexa.handler(event, context, callback);
     // alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
     // Uncomment when using actual device
-    deviceId = event.context.System.device.deviceId;
+    // deviceId = event.context.System.device.deviceId;
+    deviceId = "amzn1.ask.device.AEDESKFZ4SBJNWU3M7EXRX7NJL5DTLKLAP2KRVBKYQ5PYRNQRUWZBSUKWWWW4DDJOCZE3WC2XBWJHQJ4PVMN5HBHLY4UHSK5W76VCAJ5L7NNSIRNHHSTG5WA66NRWQCWJ22R2LGSICQHW2SFNV6V3EIVVCUA";
     console.info(deviceId);
     guestService_1.guestService.getGuestInformation(deviceId, guestInfo => {
         guestInformation = guestInfo;
@@ -29,8 +31,12 @@ let handlers = {
     },
     'FoodServiceIntent': function () {
         let food = this.event.request.intent.slots.foodItem.value;
-        let message = "Please send " + food + " to Room " + guestInformation.RoomNumber;
-        this.emit(':ask', 'Sending ' + food + ' your way, ' + guestInformation.FName);
+        foodService_1.foodService.getFoodInformation(food, foodInfo => {
+            console.info("Food Info: " + JSON.stringify(foodInfo.Index));
+            foodService_1.foodService.updateRating(foodInfo);
+            let message = "Please send " + food + " to Room " + guestInformation.RoomNumber;
+            this.emit(':ask', 'Sending ' + food + ' your way, ' + guestInformation.FName);
+        });
     },
     'MenuIntent': function () {
         this.emit(':ask', 'Reading menu items now');

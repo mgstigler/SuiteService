@@ -72,6 +72,8 @@ functions:
         - lambda/handler.js
         - lambda/Services/towelService.js
         - lambda/Services/guestService.js
+        - lambda/Services/foodService.js
+        - lambda/Models/foodModel.js
         - node_modules/**
 
   getRoom:
