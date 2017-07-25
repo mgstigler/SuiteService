@@ -23,7 +23,6 @@ class Container extends React.Component {
 
   updateRoomInformation() {
     axios.post("https://plocf3fmt2.execute-api.us-east-1.amazonaws.com/dev/room", {
-      AlexaId: this.state.alexaId,
       RoomNumber: this.state.roomNumber,
       FName: this.state.firstName,
       LName: this.state.lastName,
@@ -72,12 +71,6 @@ class Container extends React.Component {
         <Tabs bsStyle="pills" defaultActiveKey={1} id="uncontrolled-tab-example">
           <Tab eventKey={1} title="Guest Registration"> <br/>
             <Panel bsStyle="info" footer={registrationFooter}>
-              <FormGroup controlId="alexaID" validationState={null}>
-                <Col md={12}>
-                  <ControlLabel>Alexa ID</ControlLabel>
-                  <FormControl type="text" value={this.state.alexaID} onChange={this.updateFormValue.bind(this, 'alexaId')}/>
-                </Col>
-              </FormGroup>
 
               <FormGroup controlId="roomID" validationState={null}>
                 <Col md={12}>
@@ -100,7 +93,7 @@ class Container extends React.Component {
                 </Col>
               </FormGroup>
 
-              <FormGroup controlId="alexaID" validationState={null}>
+              <FormGroup controlId="phoneNumber" validationState={null}>
                 <Col md={12}>
                   <ControlLabel>Phone Number</ControlLabel>
                   <FormControl type="tel" value={this.state.phoneNumber} onChange={this.updateFormValue.bind(this, 'phoneNumber')}/>
