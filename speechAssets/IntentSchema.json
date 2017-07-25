@@ -17,9 +17,12 @@
       "slots":[
         {
           "name":"foodItem",
-          "type":"AMAZON.Food"
+          "type":"LIST_OF_MENU_ITEMS"
         }
       ]
+    },
+    {
+      "intent": "MenuIntent"
     },
     {
       "intent": "AMAZON.StopIntent"

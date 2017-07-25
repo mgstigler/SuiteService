@@ -15,7 +15,8 @@ FoodServiceIntent Bring me some {foodItem}
 FoodServiceIntent Please bring me a {foodItem}
 FoodServiceIntent Please bring me some {foodItem}
 FoodServiceIntent {foodItem} please
-FoodServiceIntent Can I see a menu
-FoodServiceIntent I want a menu
-FoodServiceIntent I'd like to order food
-FoodServiceIntent I'd like to order room service
+
+MenuIntent Can I see a menu
+MenuIntent I want a menu
+MenuIntent I'd like to order food
+MenuIntent I'd like to order room service
