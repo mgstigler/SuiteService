@@ -1,0 +1,35 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    background-color: #2C3E50 !important;
+}
+
+.container {
+    margin-top: 5%;
+    margin-bottom: 10%;
+}
+
+.page-header {
+    text-align: center;
+    color: wheat;
+    border-bottom: 1px solid #E74C3C !important;
+}
+
+small {
+    color: #ECF0F1 !important;
+}
+
+.form-control {
+    margin-bottom: 20px;
+}
+
+.nav-pills>li.active>a, .nav>li>a:focus {
+    background: #E74C3C !important;
+}
+.nav>li>a:hover {
+    background: #c53c2e !important;
+}
+
+.nav-pills>li>a {
+    color: white !important;
+}

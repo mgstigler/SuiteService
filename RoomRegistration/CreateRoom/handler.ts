@@ -8,13 +8,13 @@ module.exports.CreateRoom = (event: RoomModel, context, callback) => {
 
     let docClient = new AWS.DynamoDB.DocumentClient();
 
-    let table = "HotelGuests";
+    let table = "Guests";
 
     let params = {
-        TableName:table,
+        TableName:"Guests",
         Item:{
-            "RoomNumber": event.RoomNumber,
-            "AlexaId": event.AlexaId
+            "AlexaId": event.AlexaId,
+            "RoomNumber": event.RoomNumber
         }
     };
 
@@ -36,6 +36,7 @@ module.exports.CreateRoom = (event: RoomModel, context, callback) => {
             response.message = "Unable to create Room " + event.RoomNumber;
             callback(null, response);
         } else {
+            response.statusCode = 200;
             response.message = "Created Room " + event.RoomNumber + " succeeded.";
             callback(null, response);
         }

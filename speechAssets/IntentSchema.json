@@ -23,6 +23,18 @@
       ]
     },
     {
+      "intent": "FoodServiceIntent",
+      "slots":[
+        {
+          "name":"foodItem",
+          "type":"LIST_OF_MENU_ITEMS"
+        }
+      ]
+    },
+    {
+      "intent": "MenuIntent"
+    },
+    {
       "intent": "AMAZON.StopIntent"
     },
     {

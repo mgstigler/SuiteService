@@ -4,12 +4,12 @@ const AWS = require("aws-sdk");
 module.exports.CreateRoom = (event, context, callback) => {
     console.info("Received event: ", JSON.stringify(event, null, 2));
     let docClient = new AWS.DynamoDB.DocumentClient();
-    let table = "HotelGuests";
+    let table = "Guests";
     let params = {
-        TableName: table,
+        TableName: "Guests",
         Item: {
-            "RoomNumber": event.RoomNumber,
-            "AlexaId": event.AlexaId
+            "AlexaId": event.AlexaId,
+            "RoomNumber": event.RoomNumber
         }
     };
     let response = {
@@ -30,6 +30,7 @@ module.exports.CreateRoom = (event, context, callback) => {
             callback(null, response);
         }
         else {
+            response.statusCode = 200;
             response.message = "Created Room " + event.RoomNumber + " succeeded.";
             callback(null, response);
         }
