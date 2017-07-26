@@ -1,0 +1,5 @@
+LIST_OF_MENU_ITEMS:
+fries
+sundae
+pancakes
+sandwich
