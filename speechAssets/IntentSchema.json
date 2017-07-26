@@ -1,16 +1,38 @@
 {
   "intents": [
     {
-      "intent": "OrderTowelIntent"
-    },
-    {
-      "intent": "TowelNumberIntent",
-      "slots":[
+      "intent": "RequestSingularServiceIntent",
+      "slots": [
         {
-          "name":"towelNumber",
-          "type":"AMAZON.number"
+          "name": "requestedSingularService",
+          "type": "LIST_OF_SERVICES"
         }
       ]
+    },
+    {
+      "intent": "RequestedPluralServiceIntent",
+      "slots":[
+        {
+          "name":"requestNumber",
+          "type":"AMAZON.number"
+        }
+        {
+          "name": "requestedPluralService",
+          "type": "LIST_OF_SERVICES"
+        }
+      ]
+    },
+    {
+      "intent": "FoodServiceIntent",
+      "slots":[
+        {
+          "name":"foodItem",
+          "type":"LIST_OF_MENU_ITEMS"
+        }
+      ]
+    },
+    {
+      "intent": "MenuIntent"
     },
     {
       "intent": "AMAZON.StopIntent"
