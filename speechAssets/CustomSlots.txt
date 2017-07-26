@@ -3,3 +3,32 @@ fries
 sundae
 pancakes
 sandwich
+
+SERVICE:
+A Toothbrush 
+a Towel
+a Set of Towels
+a Razor
+some Soap
+some Shampoo
+some Conditioner
+some Floss
+Soap
+Shampoo
+Conditioner
+Floss
+
+SERVICES:
+Toothbrushes 
+Towels
+Sets of towels
+Razors
+bars of Soap
+bottles of Shampoo
+things of Shampoo
+shampoos 
+containers of shampoo
+bottles of Conditioner
+things of Conditioner
+conditioners
+containers of conditioner

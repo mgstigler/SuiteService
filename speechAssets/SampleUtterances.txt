@@ -1,22 +1,14 @@
-OrderTowelIntent I'd like to order a towel
-OrderTowelIntent towel
-OrderTowelIntent bring me a towel
-OrderTowelIntent please bring me a towel
-OrderTowelIntent I want a towel
-
-FoodServiceIntent I'd like a {foodItem}
-FoodServiceIntent Send me a {foodItem}
-FoodServiceIntent I'd like some {foodItem}
-FoodServiceIntent Send me some {foodItem}
-FoodServiceIntent Can I get a {foodItem}
-FoodServiceIntent Can I get some {foodItem}
-FoodServiceIntent Bring me a {foodItem}
-FoodServiceIntent Bring me some {foodItem}
-FoodServiceIntent Please bring me a {foodItem}
-FoodServiceIntent Please bring me some {foodItem}
 FoodServiceIntent {foodItem} please
-
-MenuIntent Can I see a menu
-MenuIntent I want a menu
-MenuIntent I'd like to order food
-MenuIntent I'd like to order room service
+MenuIntent Can I see a zebra
+MenuIntent zebra
+RequestedPluralServiceIntent I'd like to order {requestNumber} {requestedPluralService}
+RequestedPluralServiceIntent Send me {requestNumber} {requestedPluralService}
+RequestedPluralServiceIntent bring me {requestNumber} {requestedPluralService}
+RequestedPluralServiceIntent please bring me {requestNumber} {requestedPluralService}
+RequestedPluralServiceIntent I want {requestNumber} {requestedPluralService}
+RequestedPluralServiceIntent I need {requestNumber} {requestedPluralService}
+RequestSingularServiceIntent I'd like to order {requestedSingularService}
+RequestSingularServiceIntent bring me {requestedSingularService}
+RequestSingularServiceIntent please bring me {requestedSingularService}
+RequestSingularServiceIntent I want {requestedSingularService}
+RequestSingularServiceIntent I need {requestedSingularService}
