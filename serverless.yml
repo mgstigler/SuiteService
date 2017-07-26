@@ -74,6 +74,7 @@ functions:
         - lambda/Services/guestService.js
         - lambda/Services/foodService.js
         - lambda/Services/alertService.js
+        - lambda/Services/amenityService.js
         - lambda/Models/foodModel.js
         - lambda/Models/guestModel.js
         - node_modules/**
