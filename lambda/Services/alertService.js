@@ -13,14 +13,49 @@ class AlertService {
         request.send(callback);
         return;
     }
-    alertGuest(message, phoneNumber, callback) {
+    alertGuest(message, number, callback) {
         let params = {
             Message: message,
-            PhoneNumber: phoneNumber
+            PhoneNumber: number
         };
         let request = sns.publish(params);
-        console.info("Message sent to user: " + message);
+        console.info("Message sent to guest: " + message);
         request.send(callback);
+    }
+    addAlert(guest, service) {
+        let docClient = new AWS.DynamoDB.DocumentClient();
+        let message = 'Hello ' + guest.FName + ', we are sending ' + service + ' to room ' + guest.RoomNumber + ' now.';
+        let params = {
+            TableName: "Alerts",
+            Item: {
+                "RoomNumber": guest.RoomNumber,
+                "isActive": 1,
+                "FName": guest.FName,
+                "LName": guest.LName,
+                "PhoneNumber": guest.PhoneNumber,
+                "Message": message
+            }
+        };
+        let response = {
+            statusCode: 200,
+            message: ""
+        };
+        console.log("Adding a new item...");
+        docClient.put(params, (err, data) => {
+            if (err) {
+                response.statusCode = 500;
+                console.error("Unable to create Alert. Error JSON:", JSON.stringify(err, null, 2));
+                response.message = "Unable to create Alert.";
+            }
+            else if (params == null) {
+                response.statusCode = 404;
+                response.message = "Unable to create Room Alert.";
+            }
+            else {
+                response.statusCode = 200;
+                response.message = "Created alert for " + guest.RoomNumber + ". Message attached is: " + message;
+            }
+        });
     }
 }
 exports.AlertService = AlertService;

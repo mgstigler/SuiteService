@@ -35,7 +35,8 @@ let handlers = {
     let message = "Please send " + service + " to Laura.";
     let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
     // towelService_1.towelService.sendAlert(message, topic, null);
-    this.emit(':tell', 'Of course. We will send ' + service + ' to your room right away');
+    alertService.addAlert(guestInformation, service);
+    this.emit(':tell', 'Of course. We will send ' + service + ' to your room right away ' + guestInformation.FName);
   },
   'RequestedPluralServiceIntent': function () {
     let number = this.event.request.intent.slots.requestNumber.value;
@@ -43,7 +44,8 @@ let handlers = {
     let message = "Please send " + number + service + " to Laura.";
     let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
     // towelService_1.towelService.sendAlert(message, topic, null);
-    this.emit(':tell', 'Of course. We will send ' + number + service + ' to your room right away');
+    alertService.addAlert(guestInformation, service);
+    this.emit(':tell', 'Of course. We will send ' + number + service + ' to your room right away ' + guestInformation.FName);
   },
 
   'FoodServiceIntent': function() {

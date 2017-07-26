@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Alexa = require("alexa-sdk");
+const alertService_1 = require("./Services/alertService");
 const guestService_1 = require("./Services/guestService");
 const foodService_1 = require("./Services/foodService");
 let deviceId = null;
@@ -31,7 +32,8 @@ let handlers = {
         let message = "Please send " + service + " to Laura.";
         let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
         // towelService_1.towelService.sendAlert(message, topic, null);
-        this.emit(':tell', 'Of course. We will send ' + service + ' to your room right away');
+        alertService_1.alertService.addAlert(guestInformation, service);
+        this.emit(':tell', 'Of course. We will send ' + service + ' to your room right away ' + guestInformation.FName);
     },
     'RequestedPluralServiceIntent': function () {
         let number = this.event.request.intent.slots.requestNumber.value;
@@ -39,7 +41,8 @@ let handlers = {
         let message = "Please send " + number + service + " to Laura.";
         let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
         // towelService_1.towelService.sendAlert(message, topic, null);
-        this.emit(':tell', 'Of course. We will send ' + number + service + ' to your room right away');
+        alertService_1.alertService.addAlert(guestInformation, service);
+        this.emit(':tell', 'Of course. We will send ' + number + service + ' to your room right away ' + guestInformation.FName);
     },
     'FoodServiceIntent': function () {
         let food = this.event.request.intent.slots.foodItem.value;
