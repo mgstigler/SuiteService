@@ -1,0 +1,129 @@
+{
+  "service": {
+    "service": "SuiteServiceSkill",
+    "serviceObject": {
+      "name": "SuiteServiceSkill"
+    },
+    "provider": {
+      "stage": "dev",
+      "region": "us-east-1",
+      "variableSyntax": "\\${([ :a-zA-Z0-9._,\\-\\/\\(\\)]+?)}",
+      "name": "aws",
+      "runtime": "nodejs6.10",
+      "role": "arn:aws:iam::202274289241:role/HotelServiceSkill-dev-us-east-1-lambdaRole",
+      "versionFunctions": true,
+      "remoteFunctionData": null,
+      "compiledCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket"
+          },
+          "SuiteServiceLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/SuiteServiceSkill-dev-SuiteService"
+            }
+          },
+          "SuiteServiceLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/SuiteServiceSkill/dev/1501026592354-2017-07-25T23:49:52.354Z/SuiteService.zip"
+              },
+              "FunctionName": "SuiteServiceSkill-dev-SuiteService",
+              "Handler": "lambda/handler.SuiteService",
+              "MemorySize": 1024,
+              "Role": "arn:aws:iam::202274289241:role/HotelServiceSkill-dev-us-east-1-lambdaRole",
+              "Runtime": "nodejs6.10",
+              "Timeout": 6
+            },
+            "DependsOn": [
+              "SuiteServiceLogGroup"
+            ]
+          },
+          "SuiteServiceLambdaVersionn2zAYZtnyuyXTlAH8T12NoGWxbJJKNIxrDJhB4aDy0": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "SuiteServiceLambdaFunction"
+              },
+              "CodeSha256": "n2zAYZtnyuyXTlAH8T12NoGWx+bJJKNIxrDJhB4aDy0="
+            }
+          },
+          "SuiteServiceLambdaPermissionAlexaSkill": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "SuiteServiceLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "alexa-appkit.amazon.com"
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          },
+          "SuiteServiceLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "SuiteServiceLambdaVersionn2zAYZtnyuyXTlAH8T12NoGWxbJJKNIxrDJhB4aDy0"
+            }
+          }
+        }
+      },
+      "coreCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket"
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          }
+        }
+      },
+      "vpc": {}
+    },
+    "functions": {
+      "SuiteService": {
+        "handler": "lambda/handler.SuiteService",
+        "events": [
+          "alexaSkill"
+        ],
+        "package": {
+          "include": [
+            "lambda/handler.js",
+            "lambda/Services/towelService.js",
+            "node_modules/**"
+          ]
+        },
+        "name": "SuiteServiceSkill-dev-SuiteService",
+        "artifact": "C:\\Users\\lkerr\\Desktop\\SuiteService\\.serverless\\SuiteService.zip",
+        "vpc": {}
+      }
+    }
+  },
+  "package": {
+    "individually": true,
+    "artifactDirectoryName": "serverless/SuiteServiceSkill/dev/1501026592354-2017-07-25T23:49:52.354Z",
+    "artifact": ""
+  }
+}
