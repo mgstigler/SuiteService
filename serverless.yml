@@ -115,14 +115,26 @@ functions:
           - node_modules/**
 
   updateAlerts:
-      handler: UpdateAlerts/handler.UpdateAlert
+      handler: Alerts/UpdateAlerts/handler.UpdateAlert
       events:
         - http:
             path: alerts
             method: post
       package:
         include:
-          - UpdateAlerts/handler.js
+          - Alerts/UpdateAlerts/handler.js
+          - lambda/Services/alertService.js
+          - node_modules/**
+  
+  getAlerts:
+      handler: Alerts/GetAlerts/handler.GetAlerts
+      events:
+        - http:
+            path: alerts
+            method: get
+      package:
+        include:
+          - Alerts/GetAlerts/handler.js
           - lambda/Services/alertService.js
           - node_modules/**
 
