@@ -40,8 +40,8 @@ let handlers = {
         let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
         // towelService_1.towelService.sendAlert(message, topic, null);
         this.emit(':tell', 'Of course. We will send ' + number + service + ' to your room right away');
-    }, 
-    'FoodServiceIntent':function () {
+    },
+    'FoodServiceIntent': function () {
         let food = this.event.request.intent.slots.foodItem.value;
         foodService_1.foodService.getFoodInformation(food, foodInfo => {
             console.info("Food Info: " + JSON.stringify(foodInfo.Index));
@@ -58,11 +58,16 @@ let handlers = {
             this.emit(':askWithCard', 'We are sending ' + food + ' your way, ' + guestInformation.FName, cardTitle, cardContent, imageObj);
         });
     },
-    'MenuIntent':function () {
+    'MenuIntent': function () {
         foodService_1.foodService.getMenu(menu => {
+            var imageObj = {
+                smallImageUrl: bucketPath + menu.image + '.jpg',
+                largeImageUrl: bucketPath + menu.image + '.jpg'
+            };
+            console.info(menu.speech);
             cardTitle = menu.speech + ' Menu';
             cardContent = menu.items.join(", and ");
-            this.emit(':askWithCard', 'We are serving ' + menu.speech + ' now.  This includes ' + menu.items.join(", and ") + '. What can I get for you?', cardTitle, cardContent);
+            this.emit(':askWithCard', 'We are serving ' + menu.speech + ' now.  This includes ' + menu.items.join(", and ") + '. What can I get for you?', 'Okay', cardTitle, cardContent, imageObj);
         });
     },
     'AMAZON.StopIntent': function () {
@@ -84,3 +89,4 @@ let handlers = {
         this.emit(':ask', `What would you like to do?`, `What would you like to do?`);
     }
 };
+//# sourceMappingURL=handler.js.map
