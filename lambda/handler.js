@@ -38,8 +38,27 @@ let handlers = {
         let service = this.event.request.intent.slots.requestedPluralService.value;
         let message = "Please send " + number + service + " to Laura.";
         let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
+
+        var intentObj = this.event.request.intent;
+        if (intentObj.slots.requestNumber.confirmationStatus !== 'CONFIRMED') {
+            if (intentObj.slots.requestNumber.confirmationStatus !== 'DENIED') {
+                // Slot value is not confirmed
+                var slotToConfirm = 'requestNumber';
+                var speechOutput = 'You want' + intentObj.slots.requestNumber.value + service + ', is that correct?';
+                var repromptSpeech = speechOutput;
+                this.emit(':confirmSlot', slotToConfirm, speechOutput, repromptSpeech);
+            } else {
+                // Users denies the confirmation of slot value
+                var slotToElicit = 'requestNumber';
+                var speechOutput = 'Okay, how many would you like?';
+                this.emit(':elicitSlot', slotToElicit, speechOutput, speechOutput);
+            }
+        }  else {
+            this.emit(':tell', 'Of course. We will send ' + number + service + ' to your room right away');
+        }
+
         // towelService_1.towelService.sendAlert(message, topic, null);
-        this.emit(':tell', 'Of course. We will send ' + number + service + ' to your room right away');
+
     }, 
     'FoodServiceIntent':function () {
         let food = this.event.request.intent.slots.foodItem.value;
