@@ -3,4 +3,5 @@ export interface RoomModel {
     AlexaId: string;
     FName: string;
     LName: string;
+    PhoneNumber: string;
 }

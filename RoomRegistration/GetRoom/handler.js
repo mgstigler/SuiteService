@@ -1,17 +1,18 @@
 'use strict';
-exports.__esModule = true;
-var AWS = require("aws-sdk");
-module.exports.GetRoom = function (event, context, callback) {
+Object.defineProperty(exports, "__esModule", { value: true });
+const AWS = require("aws-sdk");
+module.exports.GetRoom = (event, context, callback) => {
     console.info("Received event: ", JSON.stringify(event, null, 2));
-    var docClient = new AWS.DynamoDB.DocumentClient();
-    var table = "Guests";
+    let docClient = new AWS.DynamoDB.DocumentClient();
+    let table = "Guests";
     console.info(event);
-    var response = {
+    let response = {
         statusCode: 200,
-        message: ""
+        message: "",
+        data: null
     };
-    var params = {
-        TableName: table,
+    let params = {
+        TableName: "Guests",
         Key: {
             "AlexaId": event.AlexaId
         }
@@ -21,17 +22,22 @@ module.exports.GetRoom = function (event, context, callback) {
             console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
             response.statusCode = 500;
             response.message = "Cannot find room for " + event.AlexaId;
+            response.data = data;
             callback(null, response);
         }
         else if (data.Item == null) {
             response.statusCode = 404;
             response.message = "Cannot find room for " + event.AlexaId;
+            response.data = data;
             callback(null, response);
         }
         else {
             console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+            response.statusCode = 200;
             response.message = "Room retrieved: " + JSON.stringify(data);
+            response.data = data;
             callback(null, response);
         }
     });
 };
+//# sourceMappingURL=handler.js.map
