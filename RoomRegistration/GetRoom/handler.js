@@ -13,21 +13,23 @@ module.exports.GetRoom = (event, context, callback) => {
     };
     let params = {
         TableName: "Guests",
-        Key: {
-            "AlexaId": event.AlexaId
+        IndexName: "RoomNumber-index",
+        KeyConditionExpression: "RoomNumber = :r",
+        ExpressionAttributeValues: {
+            ":r": event.RoomNumber
         }
     };
-    docClient.get(params, function (err, data) {
+    docClient.query(params, function (err, data) {
         if (err) {
             console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
             response.statusCode = 500;
-            response.message = "Cannot find room for " + event.AlexaId;
+            response.message = "Cannot find room";
             response.data = data;
             callback(null, response);
         }
-        else if (data.Item == null) {
+        else if (data.Items == null) {
             response.statusCode = 404;
-            response.message = "Cannot find room for " + event.AlexaId;
+            response.message = "Cannot find room";
             response.data = data;
             callback(null, response);
         }
@@ -36,7 +38,7 @@ module.exports.GetRoom = (event, context, callback) => {
             response.statusCode = 200;
             response.message = "Room retrieved: " + JSON.stringify(data);
             response.data = data;
-            callback(null, response);
+            callback(null, response.data.Items[0]);
         }
     });
 };
