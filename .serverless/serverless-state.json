@@ -1,0 +1,875 @@
+{
+  "service": {
+    "service": "SuiteServiceSkillMaddie",
+    "serviceObject": {
+      "name": "SuiteServiceSkillMaddie"
+    },
+    "provider": {
+      "stage": "dev",
+      "region": "us-east-1",
+      "variableSyntax": "\\${([ :a-zA-Z0-9._,\\-\\/\\(\\)]+?)}",
+      "name": "aws",
+      "runtime": "nodejs6.10",
+      "role": "arn:aws:iam::202274289241:role/HotelServiceSkill-dev-us-east-1-lambdaRole",
+      "versionFunctions": true,
+      "compiledCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket"
+          },
+          "SuiteServiceLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/SuiteServiceSkillMaddie-dev-suiteService"
+            }
+          },
+          "GetRoomLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/SuiteServiceSkillMaddie-dev-getRoom"
+            }
+          },
+          "CreateRoomLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/SuiteServiceSkillMaddie-dev-createRoom"
+            }
+          },
+          "UpdateRoomLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/SuiteServiceSkillMaddie-dev-updateRoom"
+            }
+          },
+          "UpdateAlertsLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/SuiteServiceSkillMaddie-dev-updateAlerts"
+            }
+          },
+          "GetAlertsLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/SuiteServiceSkillMaddie-dev-getAlerts"
+            }
+          },
+          "SuiteServiceLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/SuiteServiceSkillMaddie/dev/1501173275707-2017-07-27T16:34:35.707Z/suiteService.zip"
+              },
+              "FunctionName": "SuiteServiceSkillMaddie-dev-suiteService",
+              "Handler": "lambda/handler.SuiteService",
+              "MemorySize": 1024,
+              "Role": "arn:aws:iam::202274289241:role/HotelServiceSkill-dev-us-east-1-lambdaRole",
+              "Runtime": "nodejs6.10",
+              "Timeout": 6
+            },
+            "DependsOn": [
+              "SuiteServiceLogGroup"
+            ]
+          },
+          "SuiteServiceLambdaVersionHEZhTEHXbzG8qRP9n8Ds8Yt2OyOYPu2RZG4VjS1w": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "SuiteServiceLambdaFunction"
+              },
+              "CodeSha256": "HEZ/hTE+HXbzG8qRP9n8Ds8Yt+2OyOYPu2RZG4VjS1w="
+            }
+          },
+          "GetRoomLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/SuiteServiceSkillMaddie/dev/1501173275707-2017-07-27T16:34:35.707Z/getRoom.zip"
+              },
+              "FunctionName": "SuiteServiceSkillMaddie-dev-getRoom",
+              "Handler": "RoomRegistration/GetRoom/handler.GetRoom",
+              "MemorySize": 1024,
+              "Role": "arn:aws:iam::202274289241:role/HotelServiceSkill-dev-us-east-1-lambdaRole",
+              "Runtime": "nodejs6.10",
+              "Timeout": 6
+            },
+            "DependsOn": [
+              "GetRoomLogGroup"
+            ]
+          },
+          "GetRoomLambdaVersionNExdHIv62J499QSuTeRRpK8ho8tPKV0jHlikMzrRM": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetRoomLambdaFunction"
+              },
+              "CodeSha256": "NExdHIv62J499+QSuTe/RRpK8ho8tPKV0jHlikMzrRM="
+            }
+          },
+          "CreateRoomLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/SuiteServiceSkillMaddie/dev/1501173275707-2017-07-27T16:34:35.707Z/createRoom.zip"
+              },
+              "FunctionName": "SuiteServiceSkillMaddie-dev-createRoom",
+              "Handler": "RoomRegistration/CreateRoom/handler.CreateRoom",
+              "MemorySize": 1024,
+              "Role": "arn:aws:iam::202274289241:role/HotelServiceSkill-dev-us-east-1-lambdaRole",
+              "Runtime": "nodejs6.10",
+              "Timeout": 6
+            },
+            "DependsOn": [
+              "CreateRoomLogGroup"
+            ]
+          },
+          "CreateRoomLambdaVersionYgdF5I09iJQlYK67WrYINT5xlJ2P3RAPqhjJhephMiI": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "CreateRoomLambdaFunction"
+              },
+              "CodeSha256": "YgdF5I09iJQlYK67WrYINT5xlJ2P3RAPqhjJhephMiI="
+            }
+          },
+          "UpdateRoomLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/SuiteServiceSkillMaddie/dev/1501173275707-2017-07-27T16:34:35.707Z/updateRoom.zip"
+              },
+              "FunctionName": "SuiteServiceSkillMaddie-dev-updateRoom",
+              "Handler": "RoomRegistration/UpdateRoom/handler.UpdateRoom",
+              "MemorySize": 1024,
+              "Role": "arn:aws:iam::202274289241:role/HotelServiceSkill-dev-us-east-1-lambdaRole",
+              "Runtime": "nodejs6.10",
+              "Timeout": 6
+            },
+            "DependsOn": [
+              "UpdateRoomLogGroup"
+            ]
+          },
+          "UpdateRoomLambdaVersion6vW9HTmxJ206JelTdtDrLLrN5R97JPq2DuRaReg": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "UpdateRoomLambdaFunction"
+              },
+              "CodeSha256": "6vW+9HTmxJ206J+elTdtDr+LLrN5R97JPq2+DuRaReg="
+            }
+          },
+          "UpdateAlertsLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/SuiteServiceSkillMaddie/dev/1501173275707-2017-07-27T16:34:35.707Z/updateAlerts.zip"
+              },
+              "FunctionName": "SuiteServiceSkillMaddie-dev-updateAlerts",
+              "Handler": "Alerts/UpdateAlerts/handler.UpdateAlert",
+              "MemorySize": 1024,
+              "Role": "arn:aws:iam::202274289241:role/HotelServiceSkill-dev-us-east-1-lambdaRole",
+              "Runtime": "nodejs6.10",
+              "Timeout": 6
+            },
+            "DependsOn": [
+              "UpdateAlertsLogGroup"
+            ]
+          },
+          "UpdateAlertsLambdaVersionI7nhhyaAtT0ZpcdOV4jMobs8Xuf59H0gpOofH9ExI": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "UpdateAlertsLambdaFunction"
+              },
+              "CodeSha256": "I7nhhyaAtT0/ZpcdOV4j+Mobs8Xuf59H0gpOofH9ExI="
+            }
+          },
+          "GetAlertsLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/SuiteServiceSkillMaddie/dev/1501173275707-2017-07-27T16:34:35.707Z/getAlerts.zip"
+              },
+              "FunctionName": "SuiteServiceSkillMaddie-dev-getAlerts",
+              "Handler": "Alerts/GetAlerts/handler.GetAlerts",
+              "MemorySize": 1024,
+              "Role": "arn:aws:iam::202274289241:role/HotelServiceSkill-dev-us-east-1-lambdaRole",
+              "Runtime": "nodejs6.10",
+              "Timeout": 6
+            },
+            "DependsOn": [
+              "GetAlertsLogGroup"
+            ]
+          },
+          "GetAlertsLambdaVersionyksQfogpkqTp87qOJ6GHmBznmSriaBoDcWPRiys": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetAlertsLambdaFunction"
+              },
+              "CodeSha256": "yksQfog/pkqTp87+qOJ6GHmBznmSriaBo/Dc/WPRiys="
+            }
+          },
+          "ApiGatewayRestApi": {
+            "Type": "AWS::ApiGateway::RestApi",
+            "Properties": {
+              "Name": "dev-SuiteServiceSkillMaddie"
+            }
+          },
+          "ApiGatewayResourceRoom": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "room",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceAlerts": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "alerts",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodRoomGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceRoom"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetRoomLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayMethodRoomPut": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "PUT",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceRoom"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "CreateRoomLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayMethodRoomPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceRoom"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "UpdateRoomLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayMethodAlertsPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceAlerts"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "UpdateAlertsLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayMethodAlertsGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceAlerts"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetAlertsLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayDeployment1501173276210": {
+            "Type": "AWS::ApiGateway::Deployment",
+            "Properties": {
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "StageName": "dev"
+            },
+            "DependsOn": [
+              "ApiGatewayMethodRoomGet",
+              "ApiGatewayMethodRoomPut",
+              "ApiGatewayMethodRoomPost",
+              "ApiGatewayMethodAlertsPost",
+              "ApiGatewayMethodAlertsGet"
+            ]
+          },
+          "GetRoomLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetRoomLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "CreateRoomLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "CreateRoomLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "UpdateRoomLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "UpdateRoomLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "UpdateAlertsLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "UpdateAlertsLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetAlertsLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetAlertsLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "SuiteServiceLambdaPermissionAlexaSkill": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "SuiteServiceLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "alexa-appkit.amazon.com"
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          },
+          "SuiteServiceLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "SuiteServiceLambdaVersionHEZhTEHXbzG8qRP9n8Ds8Yt2OyOYPu2RZG4VjS1w"
+            }
+          },
+          "GetRoomLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetRoomLambdaVersionNExdHIv62J499QSuTeRRpK8ho8tPKV0jHlikMzrRM"
+            }
+          },
+          "CreateRoomLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "CreateRoomLambdaVersionYgdF5I09iJQlYK67WrYINT5xlJ2P3RAPqhjJhephMiI"
+            }
+          },
+          "UpdateRoomLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "UpdateRoomLambdaVersion6vW9HTmxJ206JelTdtDrLLrN5R97JPq2DuRaReg"
+            }
+          },
+          "UpdateAlertsLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "UpdateAlertsLambdaVersionI7nhhyaAtT0ZpcdOV4jMobs8Xuf59H0gpOofH9ExI"
+            }
+          },
+          "GetAlertsLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetAlertsLambdaVersionyksQfogpkqTp87qOJ6GHmBznmSriaBoDcWPRiys"
+            }
+          },
+          "ServiceEndpoint": {
+            "Description": "URL of the service endpoint",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Ref": "ApiGatewayRestApi"
+                  },
+                  ".execute-api.us-east-1.amazonaws.com/dev"
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "coreCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket"
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          }
+        }
+      },
+      "vpc": {}
+    },
+    "functions": {
+      "suiteService": {
+        "handler": "lambda/handler.SuiteService",
+        "events": [
+          "alexaSkill"
+        ],
+        "package": {
+          "include": [
+            "lambda/handler.js",
+            "lambda/Services/towelService.js",
+            "lambda/Services/guestService.js",
+            "lambda/Services/foodService.js",
+            "lambda/Services/alertService.js",
+            "lambda/Models/foodModel.js",
+            "lambda/Models/guestModel.js",
+            "node_modules/**"
+          ]
+        },
+        "name": "SuiteServiceSkillMaddie-dev-suiteService",
+        "artifact": "/Users/mstigler/Desktop/AlexaSkills/SuiteService/.serverless/suiteService.zip",
+        "vpc": {}
+      },
+      "getRoom": {
+        "handler": "RoomRegistration/GetRoom/handler.GetRoom",
+        "events": [
+          {
+            "http": {
+              "path": "room",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "package": {
+          "include": [
+            "RoomRegistration/GetRoom/handler.js",
+            "RoomRegistration/Shared/Models/roomModel.js",
+            "node_modules/**"
+          ]
+        },
+        "name": "SuiteServiceSkillMaddie-dev-getRoom",
+        "artifact": "/Users/mstigler/Desktop/AlexaSkills/SuiteService/.serverless/getRoom.zip",
+        "vpc": {}
+      },
+      "createRoom": {
+        "handler": "RoomRegistration/CreateRoom/handler.CreateRoom",
+        "events": [
+          {
+            "http": {
+              "path": "room",
+              "method": "put",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "package": {
+          "include": [
+            "RoomRegistration/CreateRoom/handler.js",
+            "RoomRegistration/Shared/Models/roomModel.js",
+            "node_modules/**"
+          ]
+        },
+        "name": "SuiteServiceSkillMaddie-dev-createRoom",
+        "artifact": "/Users/mstigler/Desktop/AlexaSkills/SuiteService/.serverless/createRoom.zip",
+        "vpc": {}
+      },
+      "updateRoom": {
+        "handler": "RoomRegistration/UpdateRoom/handler.UpdateRoom",
+        "events": [
+          {
+            "http": {
+              "path": "room",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "package": {
+          "include": [
+            "RoomRegistration/UpdateRoom/handler.js",
+            "RoomRegistration/Shared/Models/roomModel.js",
+            "node_modules/**"
+          ]
+        },
+        "name": "SuiteServiceSkillMaddie-dev-updateRoom",
+        "artifact": "/Users/mstigler/Desktop/AlexaSkills/SuiteService/.serverless/updateRoom.zip",
+        "vpc": {}
+      },
+      "updateAlerts": {
+        "handler": "Alerts/UpdateAlerts/handler.UpdateAlert",
+        "events": [
+          {
+            "http": {
+              "path": "alerts",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "package": {
+          "include": [
+            "Alerts/UpdateAlerts/handler.js",
+            "lambda/Services/alertService.js",
+            "node_modules/**"
+          ]
+        },
+        "name": "SuiteServiceSkillMaddie-dev-updateAlerts",
+        "artifact": "/Users/mstigler/Desktop/AlexaSkills/SuiteService/.serverless/updateAlerts.zip",
+        "vpc": {}
+      },
+      "getAlerts": {
+        "handler": "Alerts/GetAlerts/handler.GetAlerts",
+        "events": [
+          {
+            "http": {
+              "path": "alerts",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "package": {
+          "include": [
+            "Alerts/GetAlerts/handler.js",
+            "lambda/Services/alertService.js",
+            "node_modules/**"
+          ]
+        },
+        "name": "SuiteServiceSkillMaddie-dev-getAlerts",
+        "artifact": "/Users/mstigler/Desktop/AlexaSkills/SuiteService/.serverless/getAlerts.zip",
+        "vpc": {}
+      }
+    }
+  },
+  "package": {
+    "individually": true,
+    "artifactDirectoryName": "serverless/SuiteServiceSkillMaddie/dev/1501173275707-2017-07-27T16:34:35.707Z",
+    "artifact": ""
+  }
+}

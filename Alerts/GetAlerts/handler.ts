@@ -1,10 +1,10 @@
 'use strict';
 import * as AWS from "aws-sdk";
+import * as querystring from "querystring";
 import {alertService} from '../../lambda/Services/alertService'
 
 module.exports.GetAlerts = (event, context, callback) => {
     console.info("Received event: ", JSON.stringify(event, null, 2));
-
     let docClient = new AWS.DynamoDB.DocumentClient()
     let alertList = [];
 
@@ -13,7 +13,7 @@ module.exports.GetAlerts = (event, context, callback) => {
         IndexName: "isActive-index",
         KeyConditionExpression:"isActive = :a",
         ExpressionAttributeValues: {
-            ":a": 1
+            ":a": event.isActive
         }
     };
 
