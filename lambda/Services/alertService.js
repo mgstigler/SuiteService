@@ -29,7 +29,7 @@ class AlertService {
             TableName: "Alerts",
             Item: {
                 "RoomNumber": guest.RoomNumber,
-                "isActive": 1,
+                "isActive": "1",
                 "FName": guest.FName,
                 "LName": guest.LName,
                 "PhoneNumber": guest.PhoneNumber,

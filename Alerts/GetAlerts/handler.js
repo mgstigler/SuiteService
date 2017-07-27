@@ -10,7 +10,7 @@ module.exports.GetAlerts = (event, context, callback) => {
         IndexName: "isActive-index",
         KeyConditionExpression: "isActive = :a",
         ExpressionAttributeValues: {
-            ":a": 1
+            ":a": event.isActive
         }
     };
     let response = {

@@ -10,14 +10,15 @@ module.exports.UpdateAlert = (event, context, callback) => {
     let params = {
         TableName: "Alerts",
         Key: {
-            "RoomNumber": event.RoomNumber
+            "Message": event.Message
         },
-        UpdateExpression: "set FName = :f, LName = :l, PhoneNumber = :p, isActive = :a",
+        UpdateExpression: "set FName = :f, LName = :l, PhoneNumber = :p, isActive = :a, RoomNumber = :r",
         ExpressionAttributeValues: {
             ":f": event.FName,
             ":l": event.LName,
             ":p": event.PhoneNumber,
-            ":a": 0
+            ":a": "0",
+            ":r": event.RoomNumber
         },
         ReturnValues: "UPDATED_NEW"
     };
