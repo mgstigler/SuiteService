@@ -60,7 +60,7 @@ class GuestService {
                 response.statusCode = 200;
                 response.message = "Room retrieved: " + JSON.stringify(data);
                 response.data = data;
-                callback(data);
+                callback(data.Item);
             }
         });
     }
