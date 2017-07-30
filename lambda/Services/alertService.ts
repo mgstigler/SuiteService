@@ -30,6 +30,13 @@ export class AlertService {
     }
 
     addAlert(guest: guestModel, service: String) {
+        let time = new Date();
+        let timestamp = {
+            "Date": time.getDate,
+            "Hours": time.getHours,
+            "Minutes":time.getMinutes,
+            "Seconds":time.getSeconds
+        }
         let docClient = new AWS.DynamoDB.DocumentClient();
         let message = 'Hello ' + guest.FName + ', we are sending ' + service + ' to room ' + guest.RoomNumber + ' now.';
         let params = {
@@ -40,7 +47,8 @@ export class AlertService {
                 "FName": guest.FName,
                 "LName": guest.LName,
                 "PhoneNumber": guest.PhoneNumber,
-                "Message": message
+                "Message": message,
+                "Timestamp": timestamp
             }
         };
 

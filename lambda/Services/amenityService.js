@@ -33,6 +33,19 @@ class AmenityService {
             }
         });
     }
+    getStandardTime(openingHour, closingHour, callback) {
+        let StandardTime = {
+            openingTime: "",
+            closingTime: ""
+        };
+        let openingStandard = openingHour == 12 || openingHour == 24 ? 12 : openingHour % 12;
+        let openingMeridian = openingHour >= 12 && openingHour != 24 ? "P.M." : "A.M.";
+        let closingStandard = closingHour == 12 || closingHour == 24 ? 12 : closingHour % 12;
+        let closingMeridian = closingHour >= 12 && closingHour != 24 ? "P.M." : "A.M.";
+        StandardTime.openingTime = openingStandard + " " + openingMeridian;
+        StandardTime.closingTime = closingStandard + " " + closingMeridian;
+        callback(StandardTime);
+    }
 }
 exports.AmenityService = AmenityService;
 ;
