@@ -58,15 +58,18 @@ export class FoodService {
 
     getMenu(callback) {
         let date = new Date();
-        let currentHour = date.getHours();
+        let currentHour = (date.getHours() + 20)%24;
+        console.info("Current Hour: " + currentHour);
         let Menu = {
             speech: '',
-            items: []
+            items: [],
+            image: ''
         };
         if(currentHour > 17) {
             Menu.speech = 'Dinner, Late Night, and Dessert';
             this.getItemsByMenu('Dinner', 'Late Night', 'Dessert', response => {
                 Menu.items = response;
+                Menu.image = '3';
                 callback(Menu);
             });
         }
@@ -74,6 +77,7 @@ export class FoodService {
             Menu.speech = 'Lunch and Dessert';
             this.getItemsByMenu('Lunch', 'Dessert', null, response => {
                 Menu.items = response;
+                Menu.image = '2';
                 callback(Menu);
             });
         }
@@ -81,6 +85,7 @@ export class FoodService {
             Menu.speech = 'Breakfast';
             this.getItemsByMenu('Breakfast', null, null, response => {
                 Menu.items = response;
+                Menu.image = '4';
                 callback(Menu);
             });
         }

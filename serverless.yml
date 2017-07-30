@@ -73,7 +73,10 @@ functions:
         - lambda/Services/towelService.js
         - lambda/Services/guestService.js
         - lambda/Services/foodService.js
+        - lambda/Services/alertService.js
+        - lambda/Services/amenityService.js
         - lambda/Models/foodModel.js
+        - lambda/Models/guestModel.js
         - node_modules/**
 
   getRoom:
@@ -110,6 +113,30 @@ functions:
         include:
           - RoomRegistration/UpdateRoom/handler.js
           - RoomRegistration/Shared/Models/roomModel.js
+          - node_modules/**
+
+  updateAlerts:
+      handler: Alerts/UpdateAlerts/handler.UpdateAlert
+      events:
+        - http:
+            path: alerts
+            method: post
+      package:
+        include:
+          - Alerts/UpdateAlerts/handler.js
+          - lambda/Services/alertService.js
+          - node_modules/**
+  
+  getAlerts:
+      handler: Alerts/GetAlerts/handler.GetAlerts
+      events:
+        - http:
+            path: alerts
+            method: get
+      package:
+        include:
+          - Alerts/GetAlerts/handler.js
+          - lambda/Services/alertService.js
           - node_modules/**
 
 #    The following are a few example events you can configure
