@@ -2,6 +2,7 @@ import * as Alexa from 'alexa-sdk';
 import {alertService} from './Services/alertService';
 import {guestService} from './Services/guestService';
 import {foodService} from './Services/foodService';
+import {amenityService} from './Services/amenityService';
 let deviceId = null;
 let guestInformation = null;
 let cardTitle = '';
