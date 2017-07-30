@@ -1,3 +1,10 @@
+AMENITIES:
+gym 
+ice machine 
+bar 
+pool
+restaurant
+
 LIST_OF_MENU_ITEMS:
 fries
 sundae

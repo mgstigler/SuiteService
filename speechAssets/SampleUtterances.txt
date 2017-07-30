@@ -12,3 +12,9 @@ RequestSingularServiceIntent bring me {requestedSingularService}
 RequestSingularServiceIntent please bring me {requestedSingularService}
 RequestSingularServiceIntent I want {requestedSingularService}
 RequestSingularServiceIntent I need {requestedSingularService}
+
+HotelInfoLocationIntent Where is the {amenity} 
+HotelInfoLocationIntent Tell me where the {amenity} is 
+HotelInfoLocationIntent Is there an {amenity}
+HotelInfoLocationIntent Is there a {amenity}
+HotelInfoLocationIntent {amenity}

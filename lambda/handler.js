@@ -13,8 +13,8 @@ module.exports.SuiteService = (event, context, callback) => {
     let alexa = Alexa.handler(event, context, callback);
     // alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
     // Uncomment below when testing with an actual device
-    // deviceId = event.context.System.device.deviceId;
-    deviceId = "amzn1.ask.device.AEDESKFZ4SBJNWU3M7EXRX7NJL5DTLKLAP2KRVBKYQ5PYRNQRUWZBSUKWWWW4DDJOCZE3WC2XBWJHQJ4PVMN5HBHLY4UHSK5W76VCAJ5L7NNSIRNHHSTG5WA66NRWQCWJ22R2LGSICQHW2SFNV6V3EIVVCUA";
+    //deviceId = event.context.System.device.deviceId;
+    deviceId = "amzn1.ask.device.AHDZ6YTAZ5XFXJFIR6JGJ54OFQ7PJMFOFWH6YYGCKGU4IZHC73I76XKPBSWBNFOUMKE3ZLV5MMIDPDBDV5O5UZDBWOTWNFDKSVTDN7RBDHE7SAHLXPHHQSQK2FAAECUJJMK7F4NOHD6VF2TNC5XNNM2FJB5A";
     console.info(deviceId);
     guestService_1.guestService.getGuestInformation(deviceId, guestInfo => {
         guestInformation = guestInfo;
@@ -56,20 +56,18 @@ let handlers = {
                 this.emit(':elicitSlot', slotToElicit, speechOutput, speechOutput);
             }
         }  else {
-            this.emit(':tell', 'Of course. We will send ' + number + service + ' to your room right away');
+            this.emit(':tell', 'Great. We will send ' + number + service + ' to your room right away');
         }
 
         // towelService_1.towelService.sendAlert(message, topic, null);
-<<<<<<< HEAD
         alertService_1.alertService.addAlert(guestInformation, service);
         this.emit(':tell', 'Of course. We will send ' + number + service + ' to your room right away ' + guestInformation.FName);
     },
-    'FoodServiceIntent': function () {
-=======
 
-    }, 
-    'FoodServiceIntent':function () {
->>>>>>> 14f125c5761093438a18f911e9e104f23aad9cea
+    'HotelInfoLocationIntent':function() {
+        
+    },
+    'FoodServiceIntent': function () {
         let food = this.event.request.intent.slots.foodItem.value;
         foodService_1.foodService.getFoodInformation(food, foodInfo => {
             console.info("Food Info: " + JSON.stringify(foodInfo.Index));
