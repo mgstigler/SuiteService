@@ -33,3 +33,20 @@ small {
 .nav-pills>li>a {
     color: white !important;
 }
+
+.alertTable .alertRow:hover {
+    background-color: #ebebeb;
+}
+
+.requestIcon {
+    vertical-align: middle !important;
+    text-align: center;
+}
+
+.requestIcon span {
+    cursor: pointer;
+}
+
+.requestIcon span:hover {
+    color: #19a745;
+}
