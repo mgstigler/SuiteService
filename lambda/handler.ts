@@ -17,6 +17,21 @@ module.exports.SuiteService = (event, context, callback) => {
   // deviceId = event.context.System.device.deviceId;
   deviceId = "amzn1.ask.device.AEDESKFZ4SBJNWU3M7EXRX7NJL5DTLKLAP2KRVBKYQ5PYRNQRUWZBSUKWWWW4DDJOCZE3WC2XBWJHQJ4PVMN5HBHLY4UHSK5W76VCAJ5L7NNSIRNHHSTG5WA66NRWQCWJ22R2LGSICQHW2SFNV6V3EIVVCUA";
   console.info(deviceId);
+  // let amenity = {
+  //   "Index": 1,
+  //   "Amenity": "string",
+  //   "ClosingHour": 22,
+  //   "OpeningHour": 8,
+  //   "Location": "pool"
+  // };
+  // amenityService.getHoursRemaining(amenity, answer => {
+  //   console.info(answer);
+  //   console.info(JSON.stringify(answer));
+  // })
+  // amenityService.getStandardTime(8, 22, myhours => {
+  //   console.info(myhours);
+  //   console.info(JSON.stringify(myhours));
+  // })
   guestService.getGuestInformation(deviceId, guestInfo => {
     guestInformation = guestInfo;
     alexa.registerHandlers(handlers);

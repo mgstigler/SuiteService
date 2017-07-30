@@ -46,6 +46,20 @@ class AmenityService {
         StandardTime.closingTime = closingStandard + " " + closingMeridian;
         callback(StandardTime);
     }
+    getHoursRemaining(amenity, callback) {
+        let hours = new Date().getHours();
+        let hour = hours - 4;
+        console.info("Hour: " + hour);
+        console.info("Closing hour: " + amenity.ClosingHour);
+        let remaining = 0;
+        if (hour > amenity.ClosingHour) {
+            callback(0);
+        }
+        else {
+            remaining = amenity.ClosingHour - hour;
+            callback(remaining);
+        }
+    }
 }
 exports.AmenityService = AmenityService;
 ;
