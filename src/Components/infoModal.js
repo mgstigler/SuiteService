@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import {Button, Modal, Table} from 'react-bootstrap';
 import _ from 'lodash';
+import FontAwesome from 'react-fontawesome';
 
 class InfoModal extends React.Component {
 
@@ -10,44 +11,62 @@ class InfoModal extends React.Component {
         this.state = {
             show: false,
             alexaId: "",
+            roomNumber: "",
             roomInfo: {}
         };
         this.getRoomInformation = this.getRoomInformation.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({alexaId: nextProps.alexaId});
+        this.setState({roomNumber: nextProps.roomNumber});
     }
 
     getRoomInformation() {
         var _this = this;
-        if(this.state.alexaId !== ""){
-            axios.get("https://plocf3fmt2.execute-api.us-east-1.amazonaws.com/dev/room?AlexaId=" + this.state.alexaId)
+        if(this.state.roomNumber !== ""){
+            axios.get("https://plocf3fmt2.execute-api.us-east-1.amazonaws.com/dev/room?RoomNumber=" + this.state.roomNumber)
             .then(function(response){
-                console.log(response.data);
-                _this.setState({ roomInfo: response.data.data.Item });
-                _this.setState({ show : true });
+                if(response.data !== null){
+                    _this.setState({ roomInfo: response.data });
+                    _this.setState({ show : true });
+                }
+                else{
+                    var msg = "The room you requested does not exist";
+                    _this.props.showAlert(msg, 'error', 'times', '#E74C3C');
+                }
             }).catch(function(error){
                 console.log(error);
-                alert("There was an error retrieving the room information");
+                var msg = "There was an error retrieving room information.";
+                _this.props.showAlert(msg, 'error', 'times', '#E74C3C');
             })
         }
-        else
-            alert("Please enter an Alexa ID");
+        else{
+            var msg = "Please enter a room number";
+            _this.props.showAlert(msg, 'error', 'warning', '#e4de12');
+        }
+            
     }
 
     render(){
         let close = () => this.setState({ show: false });
+
+        if(this.state.roomInfo !== null && this.state.roomInfo !== undefined){
+            var roomNum =  this.state.roomInfo.RoomNumber;
+            var firstName = this.state.roomInfo.FName;
+            var lastName = this.state.roomInfo.LName;
+            var phone = this.state.roomInfo.PhoneNumber;
+        }
+
         return (
             <div className="modal-container">
                 <Button bsStyle="info" className="infoButton" onClick={this.getRoomInformation}>
                     Retrieve
                 </Button>
-
+                
                 <Modal show={this.state.show} onHide={close} container={this} aria-labelledby="contained-modal-title">
                     <Modal.Header closeButton>
                         <Modal.Title id="contained-modal-title">
-                            Room #{this.state.roomInfo.RoomNumber}
+                            Room #{roomNum}
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
@@ -61,8 +80,8 @@ class InfoModal extends React.Component {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>{this.state.roomInfo.FName} {this.state.roomInfo.LName}</td>
-                                    <td>{this.state.roomInfo.PhoneNumber}</td>
+                                    <td>{firstName} {lastName}</td>
+                                    <td>{phone}</td>
                                 </tr>
                             </tbody>
                         </Table>
