@@ -23,6 +23,10 @@ small {
     margin-bottom: 20px;
 }
 
+.nav-pills>li>a {
+    color: white !important;
+}
+
 .nav-pills>li.active>a, .nav>li>a:focus {
     background: #E74C3C !important;
 }
@@ -30,8 +34,8 @@ small {
     background: #c53c2e !important;
 }
 
-.nav-pills>li>a {
-    color: white !important;
+.panel {
+    border-radius: 0px !important;
 }
 
 .alertTable .alertRow:hover {
