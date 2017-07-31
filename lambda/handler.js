@@ -42,7 +42,6 @@ module.exports.SuiteService = (event, context, callback) => {
     });
 };
 
- 
 
 let handlers = {
     //Handles the launch request
@@ -58,7 +57,7 @@ let handlers = {
         lookupService_1.lookupService.slotExists(service, "ServiceLookup", slotFound => {
             if (slotFound) {
                 alertService_1.alertService.addAlert(guestInformation, service);
-                this.emit(':tell', 'Of course. We will send ' + service + ' to your room right away ' + guestInformation.FName);
+                this.emit(':tell', 'Of course, ' + guestInformation.FName + ', We will send ' + service + ' to room ' + guestInformation.RoomNumber + 'right away');
             }
             else {
                 this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time.');
