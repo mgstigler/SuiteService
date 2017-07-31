@@ -159,6 +159,7 @@ class Container extends React.Component {
               <Table responsive striped hover className="alertTable">
                 <thead>
                     <tr>
+                        <th>Date  </th>
                         <th>Room Number</th>
                         <th>Name</th>
                         <th>Message</th>
@@ -170,7 +171,7 @@ class Container extends React.Component {
                     return (
                       <Alert key={i} roomNumber={alert.RoomNumber} fName={alert.FName} lName={alert.LName}
                       message={alert.Message} phoneNumber={alert.PhoneNumber} showAlert={this.showAlert} 
-                      getAlerts={this.getAlerts}/>
+                      timestamp={alert.Timestamp} getAlerts={this.getAlerts}/>
                     );
                   })}
                 </tbody>
