@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Alexa = require("alexa-sdk");
-const alertService_2 = require("./Services/alertService");
+const alertService_1 = require("./Services/alertService");
 const guestService_1 = require("./Services/guestService");
 const foodService_1 = require("./Services/foodService");
 const amenityService_1 = require("./Services/amenityService");
@@ -10,12 +10,13 @@ let guestInformation = null;
 let cardTitle = '';
 let cardContent = '';
 let bucketPath = "https://s3.amazonaws.com/food-menu-images/";
+let amenitiesBucketPath = "https://s3.amazonaws.com/amenities-images/";
 module.exports.SuiteService = (event, context, callback) => {
     let alexa = Alexa.handler(event, context, callback);
     // alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
     // Uncomment below when testing with an actual device
-    // deviceId = event.context.System.device.deviceId;
-    deviceId = "amzn1.ask.device.AEDESKFZ4SBJNWU3M7EXRX7NJL5DTLKLAP2KRVBKYQ5PYRNQRUWZBSUKWWWW4DDJOCZE3WC2XBWJHQJ4PVMN5HBHLY4UHSK5W76VCAJ5L7NNSIRNHHSTG5WA66NRWQCWJ22R2LGSICQHW2SFNV6V3EIVVCUA";
+    deviceId = event.context.System.device.deviceId;
+    // deviceId = "amzn1.ask.device.AEDESKFZ4SBJNWU3M7EXRX7NJL5DTLKLAP2KRVBKYQ5PYRNQRUWZBSUKWWWW4DDJOCZE3WC2XBWJHQJ4PVMN5HBHLY4UHSK5W76VCAJ5L7NNSIRNHHSTG5WA66NRWQCWJ22R2LGSICQHW2SFNV6V3EIVVCUA";
     console.info(deviceId);
     // let amenity = {
     //   "Index": 1,
@@ -48,7 +49,7 @@ let handlers = {
         let message = "Please send " + service + " to Laura.";
         let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
         // towelService_1.towelService.sendAlert(message, topic, null);
-        alertService_2.alertService.addAlert(guestInformation, service);
+        alertService_1.alertService.addAlert(guestInformation, service);
         this.emit(':tell', 'Of course. We will send ' + service + ' to your room right away ' + guestInformation.FName);
     },
     'RequestedPluralServiceIntent': function () {
@@ -62,13 +63,19 @@ let handlers = {
     },
     'HotelInfoLocationIntent': function () {
         let amenity = this.event.request.intent.slots.amenity.value;
-        console.info(amenity);
+        console.info("Amenity: " + amenity);
         amenityService_1.amenityService.getAmenity(amenity, amenityInfo => {
             console.info("Amenity Info: " + JSON.stringify(amenityInfo.Index));
             amenityService_1.amenityService.getStandardTime(amenityInfo.OpeningHour, amenityInfo.ClosingHour, standardTime => {
                 console.info("Amenity info standard: " + JSON.stringify(standardTime));
                 amenityService_1.amenityService.getHoursRemaining(amenityInfo, hoursRemaining => {
-                    this.emit(':tell', ' The hours are ' + standardTime.openingTime + ' to ' + standardTime.closingTime + ' and you have ' + hoursRemaining + ' hours remaining.');
+                    var imageObj = {
+                        smallImageUrl: amenitiesBucketPath + JSON.stringify(amenityInfo.Index) + '.jpg',
+                        largeImageUrl: amenitiesBucketPath + JSON.stringify(amenityInfo.Index) + '.jpg'
+                    };
+                    cardTitle = JSON.stringify(amenityInfo.Amenity);
+                    cardContent = "Opening Hour: " + standardTime.openingTime + " Closing Hour: " + standardTime.closingTime;
+                    this.emit(':tellWithCard', 'The hours are ' + standardTime.openingTime + ' to ' + standardTime.closingTime + ' and you have ' + hoursRemaining + ' hours remaining.', cardTitle, cardContent, imageObj);
                 });
             });
         });
@@ -86,8 +93,8 @@ let handlers = {
                 largeImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg'
             };
             cardTitle = JSON.stringify(foodInfo.FoodItem);
-            cardContent = "Rating: " + JSON.stringify(foodInfo.Rating);
-            this.emit(':askWithCard', 'We are sending ' + food + ' your way, ' + guestInformation.FName, cardTitle, cardContent, imageObj);
+            cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) + " Price: $" + foodInfo.Price;
+            this.emit(':askWithCard', 'We are sending ' + food + ' your way, ' + guestInformation.FName, 'Okay', cardTitle, cardContent, imageObj);
         });
     },
     'MenuIntent': function () {
@@ -96,7 +103,7 @@ let handlers = {
                 smallImageUrl: bucketPath + menu.image + '.jpg',
                 largeImageUrl: bucketPath + menu.image + '.jpg'
             };
-            console.info(menu.speech);
+            console.info("Menu: " + menu.speech);
             cardTitle = menu.speech + ' Menu';
             cardContent = menu.items.join(", and ");
             this.emit(':askWithCard', 'We are serving ' + menu.speech + ' now.  This includes ' + menu.items.join(", and ") + '. What can I get for you?', 'Okay', cardTitle, cardContent, imageObj);
