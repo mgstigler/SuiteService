@@ -5,6 +5,7 @@ const alertService_1 = require("./Services/alertService");
 const guestService_1 = require("./Services/guestService");
 const foodService_1 = require("./Services/foodService");
 const amenityService_1 = require("./Services/amenityService");
+const lookupService_1 = require("./Services/lookupService");
 let deviceId = null;
 let guestInformation = null;
 let cardTitle = '';
@@ -46,20 +47,36 @@ let handlers = {
     },
     'RequestSingularServiceIntent': function () {
         let service = this.event.request.intent.slots.requestedSingularService.value;
+        console.info("Service: " + service);
         let message = "Please send " + service + " to Laura.";
         let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
         // towelService_1.towelService.sendAlert(message, topic, null);
-        alertService_1.alertService.addAlert(guestInformation, service);
-        this.emit(':tell', 'Of course. We will send ' + service + ' to your room right away ' + guestInformation.FName);
+        lookupService_1.lookupService.slotExists(service, "ServiceLookup", slotFound => {
+            if (slotFound) {
+                alertService_1.alertService.addAlert(guestInformation, service);
+                this.emit(':tell', 'Of course. We will send ' + service + ' to your room right away ' + guestInformation.FName);
+            }
+            else {
+                this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time.');
+            }
+        });
     },
     'RequestedPluralServiceIntent': function () {
         let number = this.event.request.intent.slots.requestNumber.value;
         let service = this.event.request.intent.slots.requestedPluralService.value;
+        console.info("Service: " + service);
         let message = "Please send " + number + service + " to Laura.";
         let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
         // towelService_1.towelService.sendAlert(message, topic, null);
-        alertService_1.alertService.addAlert(guestInformation, service);
-        this.emit(':tell', 'Of course. We will send ' + number + service + ' to your room right away ' + guestInformation.FName);
+        lookupService_1.lookupService.slotExists(service, "ServiceLookup", slotFound => {
+            if (slotFound) {
+                alertService_1.alertService.addAlert(guestInformation, service);
+                this.emit(':tell', 'Of course. We will send ' + service + ' to your room right away ' + guestInformation.FName);
+            }
+            else {
+                this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time.');
+            }
+        });
     },
     'HotelInfoLocationIntent': function () {
         let amenity = this.event.request.intent.slots.amenity.value;
@@ -94,7 +111,8 @@ let handlers = {
             };
             cardTitle = JSON.stringify(foodInfo.FoodItem);
             cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) + " Price: $" + foodInfo.Price;
-            this.emit(':askWithCard', 'We are sending ' + food + ' your way, ' + guestInformation.FName, 'Okay', cardTitle, cardContent, imageObj);
+            alertService_1.alertService.addAlert(guestInformation, food);
+            this.emit(':tellWithCard', 'We are sending ' + food + ' your way, ' + guestInformation.FName, cardTitle, cardContent, imageObj);
         });
     },
     'MenuIntent': function () {
