@@ -11,6 +11,7 @@
     },
     {
       "slots": [
+       
         {
           "name": "requestNumber",
           "type": "AMAZON.NUMBER"
@@ -40,6 +41,15 @@
         }
       ]
     },
+    {"intent": "HotelInfoLocationIntent",
+    "slots":[
+      {
+        "name": "amenity",
+        "type": "AMENITIES"
+      } 
+      ] 
+    },   
+
     {
       "intent": "MenuIntent"
     }

@@ -2,19 +2,49 @@ FoodServiceIntent {foodItem} please
 MenuIntent Can I see a zebra
 MenuIntent zebra
 RequestedPluralServiceIntent I'd like to order {requestNumber} {requestedPluralService}
+RequestedPluralServiceIntent I'd like to order {requestNumber} bottles of {requestedPluralService}
+RequestedPluralServiceIntent I'd like to order {requestNumber} bars of {requestedPluralService}
 RequestedPluralServiceIntent Send me {requestNumber} {requestedPluralService}
+RequestedPluralServiceIntent Send me {requestNumber} bottles of {requestedPluralService}
+RequestedPluralServiceIntent Send me {requestNumber} bars of {requestedPluralService}
 RequestedPluralServiceIntent bring me {requestNumber} {requestedPluralService}
+RequestedPluralServiceIntent bring me {requestNumber} bottles of {requestedPluralService}
+RequestedPluralServiceIntent bring me {requestNumber} bars of {requestedPluralService}
 RequestedPluralServiceIntent please bring me {requestNumber} {requestedPluralService}
+RequestedPluralServiceIntent please bring me {requestNumber} bottles of {requestedPluralService}
+RequestedPluralServiceIntent please bring me {requestNumber} bars of {requestedPluralService}
 RequestedPluralServiceIntent I want {requestNumber} {requestedPluralService}
+RequestedPluralServiceIntent I want {requestNumber} bottles of {requestedPluralService}
+RequestedPluralServiceIntent I want {requestNumber} bars of {requestedPluralService}
 RequestedPluralServiceIntent I need {requestNumber} {requestedPluralService}
+RequestedPluralServiceIntent I need {requestNumber} bottles of {requestedPluralService}
+RequestedPluralServiceIntent I need {requestNumber} bars of {requestedPluralService}
+
 RequestSingularServiceIntent I'd like to order {requestedSingularService}
+RequestSingularServiceIntent I'd like to order a {requestedSingularService}
+RequestSingularServiceIntent I'd like to order some {requestedSingularService}
 RequestSingularServiceIntent bring me {requestedSingularService}
+RequestSingularServiceIntent bring me a {requestedSingularService}
+RequestSingularServiceIntent bring me some {requestedSingularService}
 RequestSingularServiceIntent please bring me {requestedSingularService}
+RequestSingularServiceIntent please bring me a {requestedSingularService}
+RequestSingularServiceIntent please bring me some {requestedSingularService}
 RequestSingularServiceIntent I want {requestedSingularService}
+RequestSingularServiceIntent I want a {requestedSingularService}
+RequestSingularServiceIntent I want some {requestedSingularService}
 RequestSingularServiceIntent I need {requestedSingularService}
+RequestSingularServiceIntent I need a {requestedSingularService}
+RequestSingularServiceIntent I need some {requestedSingularService}
 
 HotelInfoLocationIntent Where is the {amenity} 
 HotelInfoLocationIntent Tell me where the {amenity} is 
-HotelInfoLocationIntent Is there an {amenity}
-HotelInfoLocationIntent Is there a {amenity}
+HotelInfoLocationIntent Give me the location of the {amenity} 
 HotelInfoLocationIntent {amenity}
+
+HotelInfoHoursIntent Is the {amenity} open
+HotelInfoHoursIntent What are the {amenity} hours 
+HotelInfoHoursIntent What are the hours for the {amenity}
+
+HotelInfoOpenIntent When does the {amenity} open
+
+HotelInfoCloseIntent When does the {amenity} close

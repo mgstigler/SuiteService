@@ -12,14 +12,14 @@ pancakes
 sandwich
 
 SERVICE:
-A Toothbrush 
-a Towel
-a Set of Towels
-a Razor
-some Soap
-some Shampoo
-some Conditioner
-some Floss
+Toothbrush 
+Towel
+Set of Towels
+Razor
+Soap
+Shampoo
+Conditioner
+Floss
 Soap
 Shampoo
 Conditioner
