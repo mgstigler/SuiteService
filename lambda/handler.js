@@ -16,8 +16,8 @@ module.exports.SuiteService = (event, context, callback) => {
     let alexa = Alexa.handler(event, context, callback);
     // alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
     // Uncomment below when testing with an actual device
-    deviceId = event.context.System.device.deviceId;
-    // deviceId = "amzn1.ask.device.AEDESKFZ4SBJNWU3M7EXRX7NJL5DTLKLAP2KRVBKYQ5PYRNQRUWZBSUKWWWW4DDJOCZE3WC2XBWJHQJ4PVMN5HBHLY4UHSK5W76VCAJ5L7NNSIRNHHSTG5WA66NRWQCWJ22R2LGSICQHW2SFNV6V3EIVVCUA";
+    // deviceId = event.context.System.device.deviceId;
+    deviceId = "amzn1.ask.device.AEDESKFZ4SBJNWU3M7EXRX7NJL5DTLKLAP2KRVBKYQ5PYRNQRUWZBSUKWWWW4DDJOCZE3WC2XBWJHQJ4PVMN5HBHLY4UHSK5W76VCAJ5L7NNSIRNHHSTG5WA66NRWQCWJ22R2LGSICQHW2SFNV6V3EIVVCUA";
     console.info(deviceId);
     // let amenity = {
     //   "Index": 1,
@@ -49,8 +49,6 @@ let handlers = {
         let service = this.event.request.intent.slots.requestedSingularService.value;
         console.info("Service: " + service);
         let message = "Please send " + service + " to Laura.";
-        let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
-        // towelService_1.towelService.sendAlert(message, topic, null);
         lookupService_1.lookupService.slotExists(service, "ServiceLookup", slotFound => {
             if (slotFound) {
                 alertService_1.alertService.addAlert(guestInformation, service);
@@ -66,8 +64,6 @@ let handlers = {
         let service = this.event.request.intent.slots.requestedPluralService.value;
         console.info("Service: " + service);
         let message = "Please send " + number + service + " to Laura.";
-        let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
-        // towelService_1.towelService.sendAlert(message, topic, null);
         lookupService_1.lookupService.slotExists(service, "ServiceLookup", slotFound => {
             if (slotFound) {
                 alertService_1.alertService.addAlert(guestInformation, service);
@@ -99,20 +95,25 @@ let handlers = {
     },
     'FoodServiceIntent': function () {
         let food = this.event.request.intent.slots.foodItem.value;
-        foodService_1.foodService.getFoodInformation(food, foodInfo => {
-            console.info("Food Info: " + JSON.stringify(foodInfo.Index));
-            let message = "Please send " + food + " to Room " + guestInformation.RoomNumber;
-            let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
-            // alertService.sendAlert(message, topic, null);
-            foodService_1.foodService.updateRating(foodInfo);
-            var imageObj = {
-                smallImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg',
-                largeImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg'
-            };
-            cardTitle = JSON.stringify(foodInfo.FoodItem);
-            cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) + " Price: $" + foodInfo.Price;
-            alertService_1.alertService.addAlert(guestInformation, food);
-            this.emit(':tellWithCard', 'We are sending ' + food + ' your way, ' + guestInformation.FName, cardTitle, cardContent, imageObj);
+        lookupService_1.lookupService.slotExists(food, "MenuLookup", slotFound => {
+            if (slotFound) {
+                foodService_1.foodService.getFoodInformation(food, foodInfo => {
+                    console.info("Food Info: " + JSON.stringify(foodInfo.Index));
+                    let message = "Please send " + food + " to Room " + guestInformation.RoomNumber;
+                    foodService_1.foodService.updateRating(foodInfo);
+                    var imageObj = {
+                        smallImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg',
+                        largeImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg'
+                    };
+                    cardTitle = JSON.stringify(foodInfo.FoodItem);
+                    cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) + " Price: $" + foodInfo.Price;
+                    alertService_1.alertService.addAlert(guestInformation, food);
+                    this.emit(':tellWithCard', 'We are sending ' + food + ' your way, ' + guestInformation.FName, cardTitle, cardContent, imageObj);
+                });
+            }
+            else {
+                this.emit(':ask', 'We are sorry.  We are not serving ' + food + ' at this moment. Is there something else I can get for you?', 'What can I do for you?');
+            }
         });
     },
     'MenuIntent': function () {
