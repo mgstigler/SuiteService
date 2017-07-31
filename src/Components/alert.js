@@ -14,7 +14,8 @@ class Alert extends React.Component {
             firstName: props.fName,
             lastName: props.lName,
             message: props.message,
-            phoneNumber: props.phoneNumber
+            phoneNumber: props.phoneNumber,
+            timestamp: props.timestamp
         };
         this.sendAlertUpdate = this.sendAlertUpdate.bind(this);
     } 
@@ -25,6 +26,7 @@ class Alert extends React.Component {
         this.setState({lastName: nextProps.lName});
         this.setState({message: nextProps.message});
         this.setState({phoneNumber: nextProps.phoneNumber});
+        this.setState({timestamp: nextProps.timestamp});
     }
 
     sendAlertUpdate() {
@@ -49,9 +51,10 @@ class Alert extends React.Component {
     render() {
       return (
         <tr className="alertRow">
+            <td>{this.state.timestamp.Month}/{this.state.timestamp.Date}</td>
             <td>{this.state.roomNumber}</td>
             <td>{this.state.firstName} {this.state.lastName}</td>
-            <td>{this.state.message}</td>
+            <td style={{fontSize: '13.5px'}}>{this.state.message}</td>
             <td className="requestIcon" onClick={this.sendAlertUpdate}><FontAwesome name="paper-plane"/></td>
         </tr>
     );
