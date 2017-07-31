@@ -47,8 +47,10 @@ class AmenityService {
         callback(StandardTime);
     }
     getHoursRemaining(amenity, callback) {
-        let hours = new Date().getHours();
-        let hour = hours - 4;
+        let date = new Date();
+        let hours = date.getHours();
+        console.info("Date: " + date + "Hours: " + hours);
+        let hour = (hours + 20) % 24;
         console.info("Hour: " + hour);
         console.info("Closing hour: " + amenity.ClosingHour);
         let remaining = 0;

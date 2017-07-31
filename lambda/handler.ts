@@ -54,14 +54,29 @@ let handlers = {
     alertService.addAlert(guestInformation, service);
     this.emit(':tell', 'Of course. We will send ' + service + ' to your room right away ' + guestInformation.FName);
   },
+  
   'RequestedPluralServiceIntent': function () {
     let number = this.event.request.intent.slots.requestNumber.value;
     let service = this.event.request.intent.slots.requestedPluralService.value;
     let message = "Please send " + number + service + " to Laura.";
     let topic = "arn:aws:sns:us-east-1:202274289241:TowelService";
     // towelService_1.towelService.sendAlert(message, topic, null);
-    alertService.addAlert(guestInformation, service);
+    alertService_1.alertService.addAlert(guestInformation, service);
     this.emit(':tell', 'Of course. We will send ' + number + service + ' to your room right away ' + guestInformation.FName);
+  },
+
+  'HotelInfoLocationIntent': function() {
+    let amenity = this.event.request.intent.slots.amenity.value;
+    console.info(amenity);
+    amenityService.getAmenity(amenity, amenityInfo => {
+      console.info("Amenity Info: " + JSON.stringify(amenityInfo.Index));
+      amenityService.getStandardTime(amenityInfo.OpeningHour, amenityInfo.ClosingHour, standardTime => {
+          console.info("Amenity info standard: " + JSON.stringify(standardTime));
+          amenityService.getHoursRemaining(amenityInfo, hoursRemaining => {
+            this.emit(':tell', ' The hours are ' + standardTime.openingTime + ' to ' + standardTime.closingTime + ' and you have ' + hoursRemaining + ' hours remaining.');     
+          })
+      });      
+    });
   },
 
   'FoodServiceIntent': function() {
