@@ -1,5 +1,6 @@
 'use strict';
 import * as AWS from "aws-sdk";
+import {amenityModel} from "../Services/amenityService";
 
 let docClient = new AWS.DynamoDB.DocumentClient()
 
@@ -53,6 +54,25 @@ export class AmenityService {
         StandardTime.closingTime = closingStandard + " " + closingMeridian;
         callback(StandardTime); 
     }
+
+    getHoursRemaining(amenity : amenityModel, callback) {
+        let date = new Date();
+        let hours = date.getHours();
+        console.info("Date: " + date + "Hours: " + hours);
+        let hour = (hours + 20)%24;
+        console.info("Hour: " + hour);
+        console.info("Closing hour: " + amenity.ClosingHour);
+        let remaining = 0;
+        if(hour > amenity.ClosingHour) {
+            callback(0);
+        }
+        else {
+            remaining = amenity.ClosingHour - hour;
+            callback(remaining);
+        }        
+    }
+
+
 
 };
 
