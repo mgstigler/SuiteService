@@ -44,7 +44,3 @@ HotelInfoLocationIntent {amenity}
 HotelInfoHoursIntent Is the {amenity} open
 HotelInfoHoursIntent What are the {amenity} hours 
 HotelInfoHoursIntent What are the hours for the {amenity}
-
-HotelInfoOpenIntent When does the {amenity} open
-
-HotelInfoCloseIntent When does the {amenity} close

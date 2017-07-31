@@ -49,7 +49,14 @@
       } 
       ] 
     },   
-
+    {"intent": "HotelInfoHoursIntent",
+    "slots":[
+      {
+        "name": "amenity",
+        "type": "AMENITIES"
+      } 
+      ] 
+    },
     {
       "intent": "MenuIntent"
     }
