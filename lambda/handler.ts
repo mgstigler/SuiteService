@@ -132,7 +132,7 @@ let handlers = {
         console.info("Menu: " + menu.speech);
         cardTitle = menu.speech + ' Menu';
         cardContent = menu.items.join(", and ");
-        this.emit(':askWithCard', 'We are serving ' + menu.speech + ' now.  This includes ' + menu.items.join(", and ") + '. What can I get for you?', 'Okay', cardTitle, cardContent, imageObj);
+        this.emit(':askWithCard', 'We are serving ' + menu.speech + ' now.  This includes ' + menu.items[0] + ', ' + menu.items[1] + ', and more.  Place an order or say more', 'Okay', cardTitle, cardContent, imageObj);
       })
   },
 

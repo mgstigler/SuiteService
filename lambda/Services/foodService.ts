@@ -106,7 +106,8 @@ export class FoodService {
                 data.Items.forEach(function(item) {
                     if(item.Menu.values.includes(menu1) || item.Menu.values.includes(menu2) || item.Menu.values.includes(menu3)) {
                         console.info(JSON.stringify(item.FoodItem));
-                        response.push(item.FoodItem);
+                        let foodInfo = item.FoodItem + ': $' + item.Price;
+                        response.push(foodInfo);
                     }
                 });
                 console.info(response);
