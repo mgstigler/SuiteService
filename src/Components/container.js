@@ -3,7 +3,7 @@ import axios from 'axios';
 import css from '../styles/Container.css';
 import InfoModal from './infoModal';
 import Alert from './alert';
-import {Button, Panel, FormGroup, ControlLabel, FormControl, Col, PageHeader, Tabs, Tab, Table} from 'react-bootstrap';
+import {Button, Panel, FormGroup, ControlLabel, FormControl, Col, PageHeader, Tabs, Tab, Table, Well} from 'react-bootstrap';
 import _ from 'lodash';
 import AlertContainer from 'react-alert';
 import FontAwesome from 'react-fontawesome';
@@ -25,6 +25,7 @@ class Container extends React.Component {
     this.getAlerts = this.getAlerts.bind(this);
     this.showAlert = this.showAlert.bind(this);
     this.clearState = this.clearState.bind(this);
+    this.clearRegistration = this.clearRegistration.bind(this);
 
     this.alertOptions = {
       offset: 14,
@@ -38,7 +39,13 @@ class Container extends React.Component {
     var _this = this;
     axios.get("https://plocf3fmt2.execute-api.us-east-1.amazonaws.com/dev/alerts?isActive=1")
     .then(function(response){
-      _this.setState({alertsArr: response.data});
+      var arr = response.data
+      arr.sort(function(a, b){
+        var timeA = "" + a.Timestamp.Month + a.Timestamp.Date + a.Timestamp.Hours + a.Timestamp.Minutes + a.Timestamp.Seconds;
+        var timeB = "" + b.Timestamp.Month + b.Timestamp.Date + b.Timestamp.Hours + b.Timestamp.Minutes + b.Timestamp.Seconds;
+        return timeA - timeB;
+      });
+      _this.setState({alertsArr: arr});
     }).catch(function(error){
       console.log(error);
     })
@@ -80,6 +87,32 @@ class Container extends React.Component {
     })
   }
 
+  clearRegistration(){
+    var _this = this;
+    
+    axios.post("https://plocf3fmt2.execute-api.us-east-1.amazonaws.com/dev/room", {
+      RoomNumber: this.state.roomNumber,
+      FName: " ",
+      LName: " ",
+      PhoneNumber: " "
+    }).then(function(response){
+      console.log(response.data.statusCode);
+      if(response.data.statusCode === 200){
+        var msg = 'The guest was successfully unregistered from room #' + _this.state.roomNumber;
+        _this.showAlert(msg, 'success', 'check', '#19a745');
+        _this.clearState();
+      }
+      else {
+        var msg = "There was an issue updating the room.";
+        _this.showAlert(msg, 'error', 'times', '#E74C3C');
+      }
+    }).catch(function(error){
+      console.log(error);
+      var msg = "There was an issue updating the room.";
+      _this.showAlert(msg, 'error', 'times', '#E74C3C');
+    });
+  }
+
   updateFormValue(fieldName, evt) {
     var obj = {};
     obj[fieldName] = evt.target.value;
@@ -95,6 +128,11 @@ class Container extends React.Component {
         Register
       </Button>
     );
+    var checkoutFooter = (
+      <Button bsStyle="warning" className="unregisterButton" onClick={this.clearRegistration}>
+        Checkout
+      </Button>
+    );
     var informationFooter = (
       <InfoModal roomNumber={this.state.roomNumber} showAlert={this.showAlert}/>
     );
@@ -103,16 +141,16 @@ class Container extends React.Component {
 
     return (
 
-      <div className={'container'} style={{width: '600px'}}>
+      <div className={'container'} style={{width: '700px'}}>
 
         <AlertContainer ref={a => this.msg = a} {...this.alertOptions} />
-
         <PageHeader>Suite Service <small>Registration Portal</small></PageHeader>
 
         <Tabs bsStyle="pills" defaultActiveKey={1} id="uncontrolled-tab-example">
+
           <Tab eventKey={1} title="Guest Registration"> <br/>
             <Panel bsStyle="info" footer={registrationFooter}>
-
+              <Well>Enter guest information to register a visitor to the Alexa device</Well>
               <FormGroup controlId="roomID" validationState={null}>
                 <Col md={12}>
                   <ControlLabel>Room Number</ControlLabel>
@@ -143,8 +181,9 @@ class Container extends React.Component {
             </Panel>
           </Tab>
 
-          <Tab eventKey={2} title="Room Information"><br/>
-            <Panel bsStyle="info" footer={informationFooter}>
+          <Tab eventKey={2} title="Guest Checkout"><br/>
+            <Panel bsStyle="info" footer={checkoutFooter}>
+              <Well>Enter room number to unregister current guest</Well>
               <FormGroup controlId="roomNumber" validationState={null}>
                 <Col md={12}>
                   <ControlLabel>Room Number</ControlLabel>
@@ -154,7 +193,19 @@ class Container extends React.Component {
             </Panel>
           </Tab>
 
-          <Tab eventKey={3} title="Active Requests" onEntered={this.getAlerts}> <br/>
+          <Tab eventKey={3} title="Room Information"><br/>
+            <Panel bsStyle="info" footer={informationFooter}>
+              <Well>Enter room number to view current guest information</Well>
+              <FormGroup controlId="roomNumber" validationState={null}>
+                <Col md={12}>
+                  <ControlLabel>Room Number</ControlLabel>
+                  <FormControl type="text" value={this.state.roomNumber} onChange={this.updateFormValue.bind(this, 'roomNumber')}/>
+                </Col>
+              </FormGroup>
+            </Panel>
+          </Tab>
+
+          <Tab eventKey={4} title="Active Requests" onEntered={this.getAlerts}> <br/>
             <Panel bsStyle="info">
               <Table responsive striped hover className="alertTable">
                 <thead>
