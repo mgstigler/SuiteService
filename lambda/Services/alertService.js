@@ -25,11 +25,12 @@ class AlertService {
     addAlert(guest, service) {
         let time = new Date();
         let timestamp = {
-            "Month": time.getMonth(),
+            "Month": time.getMonth() + 1,
             "Date": time.getDate(),
             "Hours": time.getHours(),
             "Minutes": time.getMinutes(),
-            "Seconds": time.getSeconds()
+            "Seconds": time.getSeconds(),
+            "UTCSeconds" : time.getTime()
         };
         console.info(JSON.stringify(timestamp));
         let docClient = new AWS.DynamoDB.DocumentClient();

@@ -41,9 +41,7 @@ class Container extends React.Component {
     .then(function(response){
       var arr = response.data
       arr.sort(function(a, b){
-        var timeA = "" + a.Timestamp.Month + a.Timestamp.Date + a.Timestamp.Hours + a.Timestamp.Minutes + a.Timestamp.Seconds;
-        var timeB = "" + b.Timestamp.Month + b.Timestamp.Date + b.Timestamp.Hours + b.Timestamp.Minutes + b.Timestamp.Seconds;
-        return timeA - timeB;
+        return a.Timestamp.UTCSeconds - b.Timestamp.UTCSeconds;
       });
       _this.setState({alertsArr: arr});
     }).catch(function(error){
