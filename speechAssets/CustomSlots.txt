@@ -7,9 +7,48 @@ restaurant
 
 LIST_OF_MENU_ITEMS:
 fries
+some fries
 sundae
+a sundae
 pancakes
+some pancakes
+a pancake
 sandwich
+a sandwich
+red wine
+some red wine
+burger
+a burger
+water
+some water
+a water
+white wine
+some white wine
+beer
+a beer
+juice
+a juice
+grilled cheese
+a grilled cheese
+salad
+a salad
+omelet
+an omelet
+coffee
+a coffee
+sprite
+a sprite
+tacos
+some tacos
+a taco
+coke
+a coke
+hamburger
+a hamburger
+yogurt
+some yogurt
+cookies
+some cookies
 
 SERVICE:
 Toothbrush 
