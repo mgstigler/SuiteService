@@ -4,4 +4,6 @@ export interface guestModel {
     FName: string;
     LName: string;
     PhoneNumber: string;
+    CheckIn: number;
+    CheckOut: number;
 }
