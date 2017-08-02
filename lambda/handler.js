@@ -10,8 +10,12 @@ let deviceId = null;
 let guestInformation = null;
 let cardTitle = '';
 let cardContent = '';
+let SessionState = false;
 let bucketPath = "https://s3.amazonaws.com/food-menu-images/";
 let amenitiesBucketPath = "https://s3.amazonaws.com/amenities-images/";
+
+let sessionState = false;
+
 module.exports.SuiteService = (event, context, callback) => {
     let alexa = Alexa.handler(event, context, callback);
     // alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
@@ -28,22 +32,42 @@ module.exports.SuiteService = (event, context, callback) => {
 
 
 let handlers = {
+
+
     //Handles the launch request
     'LaunchRequest': function () {
-        this.emit(':ask', guestInformation.FName + 'Welcome to Suite Service, What can I do for you?', 'Would you like something delivered to your room?');
+        this.emit(':ask', guestInformation.FName + ', Welcome to Suite Service, your personal front desk assistant. What can I help you with today?', 'Would you like something delivered to your room?');
     },
     'RequestSingularServiceIntent': function () {
         let service = this.event.request.intent.slots.requestedSingularService.value;
+        // if (sessionState==true) { // user has initiated intent and said "yes"
+        //     response = 'Sure, we will also send ' + service + ' to your room. Anything else?';
+        // }
+        // else if (sessionState == false) { // user has not initiated intent 
+        //     response = 'Sure, ' + guestInformation.FName + ', We can send a' + service + ' to you in room ' + guestInformation.RoomNumber + '. Would you like anything else?';
+        // }
         console.info("Service: " + service);
         lookupService_1.lookupService.slotExists(service, "ServiceLookup", slotFound => {
             if (slotFound) {
-                alertService_1.alertService.addAlert(guestInformation, service);
-                this.emit(':tell', 'Of course, ' + guestInformation.FName + ', We will send ' + service + ' to room ' + guestInformation.RoomNumber + 'right away');
+                if (SessionState==false){
+                    SessionState=true;
+                    alertService_1.alertService.addAlert(guestInformation, service);
+                    this.emit(':ask', 'Ok, ' + guestInformation.FName + ', We can send a' + service + ' to you in room ' + guestInformation.RoomNumber + '. If you would like anything else, please ask. If not, say done');
+                }
+                else {
+                    this.emit (':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
+                    SessionState=false;
+                }
             }
             else {
                 this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time.');
+                SessionState=false;
             }
         });
+    },
+    'DoneIntent': function () {
+        this.emit(':tell', 'Ok, you will receive a text when your request is on the way.');
+        SessionState=false;        
     },
     'RequestedPluralServiceIntent': function () {
         let number = this.event.request.intent.slots.requestNumber.value;
@@ -63,12 +87,19 @@ let handlers = {
                 var speechOutput = 'Okay, how many would you like?';
                 this.emit(':elicitSlot', 'requestNumber', speechOutput, speechOutput);
               }
-            }  else {
-              this.emit(':tell', 'Great. We will send ' + number + service + ' to your room right away.');
+            }  else {  
+                if (SessionState==false){
+                    SessionState=true;  
+                    this.emit(':ask', 'Great. We will send ' + number + service + ' to your room right away. If you would like anything else, please ask. If not, say done');
+                }
+                else {
+                    this.emit (':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
+                    SessionState=false;
+                }
             }
           }
           else {
-            this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time.');
+            this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time. If you would like something else, please ask. If not, say done.', 'Would you like anything else? If not, say done.');
           }
         });
     },
@@ -138,7 +169,8 @@ let handlers = {
                     cardTitle = JSON.stringify(foodInfo.FoodItem);
                     cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) + " Price: $" + foodInfo.Price;
                     alertService_1.alertService.addAlert(guestInformation, food);
-                    this.emit(':tellWithCard', 'We are sending ' + food + ' your way, ' + guestInformation.FName, cardTitle, cardContent, imageObj);
+                    //this.emit(':ask', foodInfo.Pairing, foodInfo.Pairing);
+                    this.emit(':tellWithCard', 'We are sending ' + food + ' your way, ' + guestInformation.FName, cardContent, imageObj);
                 });
             }
             else {
@@ -160,7 +192,8 @@ let handlers = {
     },
     'AMAZON.StopIntent': function () {
         // State Automatically Saved with :tell
-        this.emit(':tell', `Goodbye.`);
+        this.emit(':tell', `Goodbye. Thanks for using SuiteService.`);
+        SessionState=false;
     },
     'AMAZON.CancelIntent': function () {
         // State Automatically Saved with :tell
@@ -177,4 +210,3 @@ let handlers = {
         this.emit(':ask', `What would you like to do?`, `What would you like to do?`);
     }
 };
-//# sourceMappingURL=handler.js.map
