@@ -52,7 +52,7 @@ let handlers = {
                 if (SessionState==false){
                     SessionState=true;
                     alertService_1.alertService.addAlert(guestInformation, service);
-                    this.emit(':ask', 'Ok, ' + guestInformation.FName + ', We can send a' + service + ' to you in room ' + guestInformation.RoomNumber + '. If you would like anything else, please ask. If not, say done');
+                    this.emit(':ask', 'Ok, ' + guestInformation.FName + ', We can send a ' + service + ' to you in room ' + guestInformation.RoomNumber + '. If you would like anything else, please ask. If not, say done');
                 }
                 else {
                     this.emit (':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
@@ -158,8 +158,8 @@ let handlers = {
         let food = this.event.request.intent.slots.foodItem.value;
         lookupService_1.lookupService.slotExists(food, "MenuLookup", slotFound => {
             if (slotFound) {
-                foodService_1.foodService.getFoodInformation(food, foodInfo => {
-                    console.info("Food Info: " + JSON.stringify(foodInfo.Index));
+                foodService_1.foodService.getFoodInformation(slotFound, foodInfo => {
+                    // console.info("Food Info: " + JSON.stringify(foodInfo.Index));
                     let message = "Please send " + food + " to Room " + guestInformation.RoomNumber;
                     foodService_1.foodService.updateRating(foodInfo);
                     var imageObj = {
@@ -167,8 +167,8 @@ let handlers = {
                         largeImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg'
                     };
                     cardTitle = JSON.stringify(foodInfo.FoodItem);
-                    cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) + " Price: $" + foodInfo.Price;
-                    alertService_1.alertService.addAlert(guestInformation, food);
+                    // cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) + " Price: $" + foodInfo.Price;
+                    alertService_1.alertService.addAlert(guestInformation, slotFound);
                     //this.emit(':ask', foodInfo.Pairing, foodInfo.Pairing);
                     this.emit(':tellWithCard', 'We are sending ' + food + ' your way, ' + guestInformation.FName, cardContent, imageObj);
                 });
