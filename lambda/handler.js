@@ -52,7 +52,7 @@ let handlers = {
                 if (SessionState==false){
                     SessionState=true;
                     alertService_1.alertService.addAlert(guestInformation, service);
-                    this.emit(':ask', 'Ok, ' + guestInformation.FName + ', We can send a' + service + ' to you in room ' + guestInformation.RoomNumber + '. If you would like anything else, please ask. If not, say done');
+                    this.emit(':ask', 'Ok, ' + guestInformation.FName + ', We can send a ' + service + ' to you in room ' + guestInformation.RoomNumber + '. If you would like anything else, please ask. If not, say done');
                 }
                 else {
                     this.emit (':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
