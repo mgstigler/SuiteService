@@ -6,6 +6,26 @@
     {
       "intent": "AMAZON.HelpIntent"
     },
+
+    //     {
+    //   "intent": "FoodServiceIntent",
+    //   "slots":[
+    //     {
+    //       "name":"foodItem",
+    //       "type":"LIST_OF_MENU_ITEMS"
+    //     }
+    //   ]
+    // },
+
+    { 
+    "intent": "DoneIntent",
+    "slots": [
+      {
+      "name": "Done",
+      "type":"DONE_SLOTS"
+      }
+      ]
+    },
     {
       "intent": "AMAZON.StopIntent"
     },
@@ -32,15 +52,15 @@
       ],
       "intent": "RequestSingularServiceIntent"
     },
-        {
-      "intent": "FoodServiceIntent",
-      "slots":[
-        {
-          "name":"foodItem",
-          "type":"LIST_OF_MENU_ITEMS"
-        }
-      ]
-    },
+    //     {
+    //   "intent": "FoodServiceIntent",
+    //   "slots":[
+    //     {
+    //       "name":"foodItem",
+    //       "type":"LIST_OF_MENU_ITEMS"
+    //     }
+    //   ]
+    // },
     {"intent": "HotelInfoLocationIntent",
     "slots":[
       {
