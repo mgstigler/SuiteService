@@ -27,7 +27,7 @@ class AlertService {
         let timestamp = {
             "Month": time.getMonth() + 1,
             "Date": time.getDate(),
-            "Hours": time.getHours(),
+            "Hours": (time.getHours() + 20) % 24,
             "Minutes": time.getMinutes(),
             "Seconds": time.getSeconds(),
             "UTCSeconds": time.getTime()
