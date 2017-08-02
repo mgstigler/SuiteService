@@ -178,7 +178,7 @@ let handlers = {
                         if (this.event.request.intent.slots.foodItem.confirmationStatus !== 'DENIED') {
                             // guest has not added to order
                             console.info("Food Info: " + JSON.stringify(foodInfo.Index));
-                            this.emit(':confirmSlot', 'foodItem', 'Would you like ' + foodInfo.Pairing + ' with that?', 'Would you like ' + foodInfo.Pairing + ' with that?');
+                            this.emit(':confirmSlot', 'foodItem', 'Ok, we have added ' + food + ' to your order. Would you like ' + foodInfo.Pairing + ' with that?', 'Would you like ' + foodInfo.Pairing + ' with that?');
                         }
                         else {
                             // guest says no nothing else
@@ -191,7 +191,7 @@ let handlers = {
                             cardTitle = JSON.stringify(foodInfo.FoodItem);
                             cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) + " Price: $" + foodInfo.Price;
                             alertService_1.alertService.addAlert(guestInformation, food);
-                            this.emit(':tellWithCard', 'We are sending ' + food + ' your way, ' + guestInformation.FName, cardTitle, cardContent, imageObj);
+                            this.emit(':tellWithCard', 'Ok, no problem. We will send ' + food + ' to room ' + guestInformation.RoomNumber + ' right away. That will be ' + foodInfo.Price + ' dollars. You will get a text when your order is on the way', cardTitle, cardContent, imageObj);
                         }
                     }
                     else {
@@ -205,7 +205,7 @@ let handlers = {
                         cardTitle = JSON.stringify(foodInfo.FoodItem);
                         cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) + " Price: $" + foodInfo.Price;
                         alertService_1.alertService.addAlert(guestInformation, food);
-                        this.emit(':tellWithCard', 'We are sending ' + food + ' and ' + foodInfo.Pairing + ' your way, ' + guestInformation.FName, cardTitle, cardContent, imageObj);
+                        this.emit(':tellWithCard', 'Great, We will submit your order for ' + food + ' and ' + foodInfo.Pairing + '. The total cost is ' + foodInfo.Price + ' dollars. You will get a text when the order is on the way.', cardTitle, cardContent, imageObj);
                     }
                 });
             }
