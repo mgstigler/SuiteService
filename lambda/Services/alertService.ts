@@ -51,7 +51,8 @@ export class AlertService {
                 "LName": guest.LName,
                 "PhoneNumber": guest.PhoneNumber,
                 "Message": message,
-                "Timestamp": timestamp
+                "Timestamp": timestamp,
+                "Service": service
             }
         };
 

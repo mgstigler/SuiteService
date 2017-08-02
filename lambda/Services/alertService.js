@@ -30,7 +30,7 @@ class AlertService {
             "Hours": (time.getHours() + 20) % 24,
             "Minutes": time.getMinutes(),
             "Seconds": time.getSeconds(),
-            "UTCSeconds" : time.getTime()
+            "UTCSeconds": time.getTime()
         };
         console.info(JSON.stringify(timestamp));
         let docClient = new AWS.DynamoDB.DocumentClient();
@@ -44,7 +44,8 @@ class AlertService {
                 "LName": guest.LName,
                 "PhoneNumber": guest.PhoneNumber,
                 "Message": message,
-                "Timestamp": timestamp
+                "Timestamp": timestamp,
+                "Service": service
             }
         };
         let response = {
