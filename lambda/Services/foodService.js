@@ -30,6 +30,13 @@ class FoodService {
             }
         });
     }
+    getFoodPrice(foodItem, callback) {
+        let price = 0;
+        this.getFoodInformation(foodItem, foodinfo => {
+            price = foodinfo.Price;
+            callback(price);
+        });
+    }
     updateRating(foodItem) {
         let params = {
             TableName: "FoodService",
