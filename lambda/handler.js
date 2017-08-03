@@ -116,29 +116,6 @@ let handlers = {
             });
         });
     },
-    // 'FoodServiceIntent': function() {
-    //     let food = this.event.request.intent.slots.foodItem.value;
-    //     lookupService.slotExists(food, "MenuLookup", slotFound => {
-    //       if(slotFound) {
-    //         foodService.getFoodInformation(food, foodInfo => {
-    //           console.info("Food Info: " + JSON.stringify(foodInfo.Index) );
-    //           let message = "Please send " + food + " to Room " + guestInformation.RoomNumber;
-    //           foodService.updateRating(foodInfo);
-    //           var imageObj = {
-    //         						    smallImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg',
-    //         						    largeImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg'
-    //           };
-    //           cardTitle = JSON.stringify(foodInfo.FoodItem);
-    //           cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) +  " Price: $" + foodInfo.Price ;
-    //           alertService.addAlert(guestInformation, food);
-    //           this.emit(':tellWithCard', 'We are sending ' + food + ' your way, ' + guestInformation.FName, cardTitle, cardContent, imageObj);
-    //         })
-    //       }
-    //       else {
-    //         this.emit(':ask', 'We are sorry.  We are not serving ' + food + ' at this moment. Is there something else I can get for you?', 'What can I do for you?');
-    //       }
-    //     });
-    // },
     'FoodServiceIntent': function () {
         let food = this.event.request.intent.slots.foodItem.value;
         lookupService_1.lookupService.slotExists(food, "MenuLookup", slotFound => {
@@ -197,6 +174,11 @@ let handlers = {
             cardContent = menu.items.join(", and ");
             this.emit(':askWithCard', 'We are serving ' + menu.speech + ' now.  This includes ' + menu.items[0] + ', ' + menu.items[1] + ', and more.  Place an order or say more', 'Okay', cardTitle, cardContent, imageObj);
         });
+    },
+    'ExtendStayIntent': function () {
+        let days = this.event.request.intent.slots.days.value;
+        alertService_1.alertService.addReservationAlert(guestInformation, days);
+        this.emit(':tell', 'Your request to extend your stay by ' + days + ' days has been sent in.  You will receive a text when it has been accepted.');
     },
     'AMAZON.StopIntent': function () {
         // State Automatically Saved with :tell

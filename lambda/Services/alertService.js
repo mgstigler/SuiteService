@@ -69,7 +69,8 @@ class AlertService {
             }
         });
     }
-    addReservationAlert(guest) {
+    addReservationAlert(guest, days) {
+        guest.CheckOut += (days * 1000 * 60 * 60 * 24);
         let time = new Date();
         let timestamp = {
             "Month": time.getMonth() + 1,
@@ -80,7 +81,7 @@ class AlertService {
             "UTCSeconds": time.getTime()
         };
         console.info(JSON.stringify(timestamp));
-        let message = 'Hello ' + guest.FName + ', your reservation has been updated';
+        let message = 'Hello ' + guest.FName + ', your stay has been extended by ' + days + ' days.';
         let params = {
             TableName: "Reservations",
             Item: {
