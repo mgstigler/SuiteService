@@ -37,8 +37,15 @@ let handlers = {
         let message = "Please send " + service + " to Laura.";
         lookupService_1.lookupService.slotExists(service, "ServiceLookup", slotFound => {
             if (slotFound) {
-                alertService_1.alertService.addAlert(guestInformation, service);
-                this.emit(':tell', 'Of course. We will send ' + service + ' to your room right away ' + guestInformation.FName);
+                if (SessionState==false){
+                    SessionState=true;
+                    alertService_1.alertService.addAlert(guestInformation, service);
+                    this.emit(':ask', 'Ok, ' + guestInformation.FName + ', We can send a ' + service + ' to you in room ' + guestInformation.RoomNumber + '. If you would like anything else, please ask. If not, say done');
+                }
+                else {
+                    this.emit (':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
+                    SessionState=false;
+                }
             }
             else {
                 this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time.');
