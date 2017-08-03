@@ -151,14 +151,18 @@ let handlers = {
                     //guest says yes to pairing
                     let message = "Please send " + food + " to Room " + guestInformation.RoomNumber;
                     foodService.updateRating(foodInfo);
-                    var imageObj = {
-                                smallImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg',
-                                largeImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg'
-                    };
-                    cardTitle = JSON.stringify(foodInfo.FoodItem);
-                    cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) +  " Price: $" + foodInfo.Price ;
-                    alertService.addAlert(guestInformation, food);
-                    this.emit(':tellWithCard', 'We are sending ' + food + ' and ' + foodInfo.Pairing + ' your way, ' + guestInformation.FName, cardTitle, cardContent, imageObj);
+                    //foodService get price of pairing
+                    foodService.getFoodPrice(foodInfo.Pairing, pairingPrice => {
+                      let totalPrice = pairingPrice + foodInfo.Price;
+                      var imageObj = {
+                                  smallImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg',
+                                  largeImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg'
+                      };
+                      cardTitle = 'Ordering ' + food + ' and ' + JSON.stringify(foodInfo.Pairing);
+                      cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) +  " Total Price: $" + totalPrice ;
+                      alertService.addAlert(guestInformation, food);
+                      this.emit(':tellWithCard', 'The total price is ' + totalPrice + ' We are sending ' + food + ' and ' + foodInfo.Pairing + ' your way, ' + guestInformation.FName, cardTitle, cardContent, imageObj);
+                    });
                 }
             });
         } else {

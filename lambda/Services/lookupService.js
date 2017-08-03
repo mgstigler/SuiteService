@@ -27,14 +27,14 @@ class LookupService {
                 response.statusCode = 404;
                 response.message = "Cannot find item " + slot;
                 response.data = data;
-                callback(data.Item.ItemNoArticle);
+                callback(data.Item);
             }
             else {
                 console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
                 response.statusCode = 200;
                 response.message = "Slot retrieved: " + JSON.stringify(data);
                 response.data = data;
-                callback(data.Item.ItemNoArticle);
+                callback(data.Item);
             }
         });
     }
