@@ -35,12 +35,14 @@ module.exports.UpdateRoom = (event, context, callback) => {
                     Key:{
                         "AlexaId": item.AlexaId
                     },
-                    UpdateExpression: "set RoomNumber = :r, FName = :f, LName = :l, PhoneNumber = :p",
+                    UpdateExpression: "set RoomNumber = :r, FName = :f, LName = :l, PhoneNumber = :p, CheckIn = :i, CheckOut = :o",
                     ExpressionAttributeValues:{
                         ":r": event.RoomNumber,
                         ":f": event.FName,
                         ":l": event.LName,
-                        ":p": event.PhoneNumber
+                        ":p": event.PhoneNumber,
+                        ":i": event.CheckIn,
+                        ":o": event.CheckOut
                     },
                     ReturnValues:"UPDATED_NEW"
                 };

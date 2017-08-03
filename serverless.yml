@@ -140,6 +140,30 @@ functions:
           - lambda/Services/alertService.js
           - node_modules/**
 
+  updateReservations:
+      handler: Reservations/UpdateReservations/handler.UpdateReservation
+      events:
+        - http:
+            path: reservations
+            method: post
+      package:
+        include:
+          - Reservations/UpdateReservations/handler.js
+          - lambda/Services/alertService.js
+          - node_modules/**
+  
+  getReservations:
+      handler: Reservations/GetReservations/handler.GetReservations
+      events:
+        - http:
+            path: reservations
+            method: get
+      package:
+        include:
+          - Reservations/GetReservations/handler.js
+          - lambda/Services/alertService.js
+          - node_modules/**
+
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
