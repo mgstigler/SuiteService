@@ -33,7 +33,7 @@ module.exports.SuiteService = (event, context, callback) => {
 };
 let handlers = {
 
-
+    //I love you maddie
     //Handles the launch request
     'LaunchRequest': function () {
         this.emit(':ask', guestInformation.FName + ', Welcome to Suite Service, your personal front desk assistant. What can I help you with today?', 'Would you like something delivered to your room?');
