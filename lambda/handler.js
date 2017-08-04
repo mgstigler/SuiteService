@@ -15,6 +15,7 @@ let bucketPath = "https://s3.amazonaws.com/food-menu-images/";
 let amenitiesBucketPath = "https://s3.amazonaws.com/amenities-images/";
 
 let sessionState = false;
+let doneService ='';
 
 module.exports.SuiteService = (event, context, callback) => {
     let alexa = Alexa.handler(event, context, callback);
@@ -69,12 +70,14 @@ let handlers = {
         });
     },
     'DoneIntent': function () {
-        this.emit(':tell', 'Ok, you will receive a text when your ' + service + ' is on the way.');
-        SessionState=false;        
+        this.emit(':tell', 'Ok, you will receive a text when your ' + doneService + ' is on the way.');
+        SessionState=false; 
+        doneService='';       
     },
     'RequestedPluralServiceIntent': function () {
         let number = this.event.request.intent.slots.requestNumber.value;
         let service = this.event.request.intent.slots.requestedPluralService.value;
+        doneService=service;
         console.info("Service: " + service);
         lookupService_1.lookupService.slotExists(service, "ServiceLookup", slotFound => {
           if (slotFound) {
@@ -112,15 +115,14 @@ let handlers = {
             console.info("Amenity Info: " + JSON.stringify(amenityInfo.Index));
             amenityService_1.amenityService.getStandardTime(amenityInfo.OpeningHour, amenityInfo.ClosingHour, standardTime => {
                 console.info("Amenity info standard: " + JSON.stringify(standardTime));
-                amenityService_1.amenityService.getHoursRemaining(amenityInfo, hoursRemaining => {
+                amenityService_1.amenistyService.getHoursRemaining(amenityInfo, hoursRemaining => {
                     var imageObj = {
                         smallImageUrl: amenitiesBucketPath + JSON.stringify(amenityInfo.Index) + '.jpg',
                         largeImageUrl: amenitiesBucketPath + JSON.stringify(amenityInfo.Index) + '.jpg'
                     };
                     cardTitle = JSON.stringify(amenityInfo.Amenity);
                     cardContent = "Opening Hour: " + standardTime.openingTime + " Closing Hour: " + standardTime.closingTime;
-                    this.emit(':tellWithCard', 'The hours are ' + standardTime.openingTime + ' to ' + standardTime.closingTime + ' and you have ' + hoursRemaining + ' hours remaining.', cardTitle, cardContent, imageObj);
-                });
+                    this.emit(':tell', amenityInfo.Location + '. It is currently closed. The hours are ' + standardTime.openingTime + ' to ' +  standardTime.closingTime);                      });
             });
         });
     },
