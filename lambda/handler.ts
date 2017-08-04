@@ -8,120 +8,144 @@ let deviceId = null;
 let guestInformation = null;
 let cardTitle = '';
 let cardContent = '';
+let SessionState = false;
 let bucketPath = "https://s3.amazonaws.com/food-menu-images/";
 let amenitiesBucketPath = "https://s3.amazonaws.com/amenities-images/";
 
+let sessionState = false;
+let doneService ='';
 
 module.exports.SuiteService = (event, context, callback) => {
-  let alexa = Alexa.handler(event, context, callback);
-  console.info(JSON.stringify(event));
-  // alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
-  // Uncomment below when testing with an actual device
-  // deviceId = event.context.System.device.deviceId;
-  deviceId = "amzn1.ask.device.AEDESKFZ4SBJNWU3M7EXRX7NJL5DTLKLAP2KRVBKYQ5PYRNQRUWZBSUKWWWW4DDJOCZE3WC2XBWJHQJ4PVMN5HBHLY4UHSK5W76VCAJ5L7NNSIRNHHSTG5WA66NRWQCWJ22R2LGSICQHW2SFNV6V3EIVVCUA";
-  console.info(deviceId);
-  guestService.getGuestInformation(deviceId, guestInfo => {
-    guestInformation = guestInfo;
-    alexa.registerHandlers(handlers);
-    alexa.execute();
-  });
+    let alexa = Alexa.handler(event, context, callback);
+    console.info(JSON.stringify(event));
+    // alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
+    // Uncomment below when testing with an actual device
+    // deviceId = event.context.System.device.deviceId;
+    deviceId = "amzn1.ask.device.AEDESKFZ4SBJNWU3M7EXRX7NJL5DTLKLAP2KRVBKYQ5PYRNQRUWZBSUKWWWW4DDJOCZE3WC2XBWJHQJ4PVMN5HBHLY4UHSK5W76VCAJ5L7NNSIRNHHSTG5WA66NRWQCWJ22R2LGSICQHW2SFNV6V3EIVVCUA";
+    console.info(deviceId);
+    guestService.getGuestInformation(deviceId, guestInfo => {
+        guestInformation = guestInfo;
+        alexa.registerHandlers(handlers);
+        alexa.execute();
+    });
 };
-
 let handlers = {
-
-  //Handles the launch request
-  'LaunchRequest': function () {
-    this.emit(':ask', 'Welcome to Suite Service, ' + guestInformation.FName + '!', 'Try saying food service.');
-  },
-
-  'RequestSingularServiceIntent': function () {
-    let service = this.event.request.intent.slots.requestedSingularService.value;
-    console.info("Service: " + service);
-    let message = "Please send " + service + " to Laura.";
-    lookupService.slotExists(service, "ServiceLookup", slotFound => {
-        if(slotFound) {
-          alertService.addAlert(guestInformation, service);
-          this.emit(':tell', 'Of course. We will send ' + service + ' to your room right away ' + guestInformation.FName);
-        }
-        else {
-          this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time.');
-        }
-    });
-
-  },
-
-  'RequestedPluralServiceIntent': function () {
-      let number = this.event.request.intent.slots.requestNumber.value;
-      let service = this.event.request.intent.slots.requestedPluralService.value;
-      
-      console.info("Service: " + service);
-      lookupService.slotExists(service, "ServiceLookup", slotFound => {
-        if (slotFound) {
-          let intentObj = this.event.request.intent;
-          if (intentObj.slots.requestNumber.confirmationStatus !== 'CONFIRMED') {
-            if (intentObj.slots.requestNumber.confirmationStatus !== 'DENIED') {
-              // Slot value is not confirmed
-              let speechOutput = 'You want ' + intentObj.slots.requestNumber.value + ' ' + service + ', is that correct?';
-              this.emit(':confirmSlot', 'requestNumber', speechOutput, speechOutput);
-            } else {
-              // Users denies the confirmation of slot value
-              let speechOutput = 'Okay, how many would you like?';
-              this.emit(':elicitSlot', 'requestNumber', speechOutput, speechOutput);
+    //I love you maddie
+    //Handles the launch request
+    'LaunchRequest': function () {
+        this.emit(':ask', guestInformation.FName + ', Welcome to Suite Service, your personal front desk assistant. What can I help you with today?', 'Would you like something delivered to your room?');
+    },
+    
+    'RequestSingularServiceIntent': function () {
+        let service = this.event.request.intent.slots.requestedSingularService.value;
+        // if (sessionState==true) { // user has initiated intent and said "yes"
+        //     response = 'Sure, we will also send ' + service + ' to your room. Anything else?';
+        // }
+        // else if (sessionState == false) { // user has not initiated intent 
+        //     response = 'Sure, ' + guestInformation.FName + ', We can send a' + service + ' to you in room ' + guestInformation.RoomNumber + '. Would you like anything else?';
+        // }
+        console.info("Service: " + service);
+        let message = "Please send " + service + " to Laura.";
+        lookupService.slotExists(service, "ServiceLookup", slotFound => {
+            if (slotFound) {
+                if (SessionState==false){
+                    SessionState=true;
+                    alertService.addAlert(guestInformation, service);
+                    this.emit(':ask', 'Ok ' + guestInformation.FName + ' , We can send a ' + service + ' to you in room ' + guestInformation.RoomNumber + '. If you would like anything else, please ask. If not, say done');
+                    doneService = service;
+                }
+                else {
+                    this.emit (':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
+                    SessionState=false;
+                }
             }
-          }  else {
-            this.emit(':tell', 'Great. We will send ' + number + service + ' to your room right away.');
-          }
-        }
-        else {
-          this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time.');
-        }
-      });
-  },
-
-  'HotelInfoLocationIntent': function() {
-    let amenity = this.event.request.intent.slots.amenity.value;
-    console.info("Amenity: " + amenity);
-    amenityService.getAmenity(amenity, amenityInfo => {
-      console.info("Amenity Info: " + JSON.stringify(amenityInfo.Index));
-      amenityService.getStandardTime(amenityInfo.OpeningHour, amenityInfo.ClosingHour, standardTime => {
-          console.info("Amenity info standard: " + JSON.stringify(standardTime));
-          amenityService.getHoursRemaining(amenityInfo, hoursRemaining => {
-            var imageObj = {
-          						    smallImageUrl: amenitiesBucketPath + JSON.stringify(amenityInfo.Index) + '.jpg',
-          						    largeImageUrl: amenitiesBucketPath + JSON.stringify(amenityInfo.Index) + '.jpg'
-          						};
-            cardTitle = JSON.stringify(amenityInfo.Amenity);
-            cardContent = "Opening Hour: " + standardTime.openingTime +  " Closing Hour: " + standardTime.closingTime ;
-            this.emit(':tellWithCard', 'The hours are ' + standardTime.openingTime + ' to ' + standardTime.closingTime + ' and you have ' + hoursRemaining + ' hours remaining.', cardTitle, cardContent, imageObj);     
-          })
-      });      
-    });
-  },
-
-  'HotelInfoHoursIntent': function () {
-    let amenity = this.event.request.intent.slots.amenity.value;
-    console.info("Amenity: " + amenity);
-    amenityService.getAmenity(amenity, amenityInfo => {
-      console.info("Amenity Info: " + JSON.stringify(amenityInfo.Index));
-      amenityService.getStandardTime(amenityInfo.OpeningHour, amenityInfo.ClosingHour, standardTime => {
-        console.info("Amenity info standard: " + JSON.stringify(standardTime));
-        amenityService.getHoursRemaining(amenityInfo, hoursRemaining => {
-          let imageObj = {
-              smallImageUrl: amenitiesBucketPath + JSON.stringify(amenityInfo.Index) + '.jpg',
-              largeImageUrl: amenitiesBucketPath + JSON.stringify(amenityInfo.Index) + '.jpg'
-          };
-          cardTitle = JSON.stringify(amenityInfo.Amenity);
-          cardContent = "Opening Hour: " + standardTime.openingTime + " Closing Hour: " + standardTime.closingTime;
-          if (hoursRemaining < 1) {
-              this.emit(':tell', 'The ' + amenity + 'is currently closed. The hours are ' + standardTime.openingTime + ' to ' +  standardTime.closingTime);
+            else {
+                this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time.');
+                SessionState=false;
+            }
+        });
+    },
+    'DoneIntent': function () {
+        this.emit(':tell', 'Ok, you will receive a text when your ' + doneService + ' is on the way.');
+        SessionState=false; 
+        doneService='';       
+    },
+    'RequestedPluralServiceIntent': function () {
+        let number = this.event.request.intent.slots.requestNumber.value;
+        let service = this.event.request.intent.slots.requestedPluralService.value;
+        doneService=service;
+        console.info("Service: " + service);
+        lookupService.slotExists(service, "ServiceLookup", slotFound => {
+          if (slotFound) {
+            var intentObj = this.event.request.intent;
+            if (intentObj.slots.requestNumber.confirmationStatus !== 'CONFIRMED') {
+              if (intentObj.slots.requestNumber.confirmationStatus !== 'DENIED') {
+                // Slot value is not confirmed
+                var speechOutput = 'You want ' + intentObj.slots.requestNumber.value + ' ' + service + ', is that correct?';
+                this.emit(':confirmSlot', 'requestNumber', speechOutput, speechOutput);
+              } else {
+                // Users denies the confirmation of slot value
+                var speechOutput = 'Okay, how many would you like?';
+                this.emit(':elicitSlot', 'requestNumber', speechOutput, speechOutput);
+              }
+            }  else {  
+                if (SessionState==false){
+                    SessionState=true;  
+                    this.emit(':ask', 'Ok. We can send ' + number + service + ' to your room. If you would like anything else, please ask. If not, say done');
+                }
+                else {
+                    this.emit (':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
+                    SessionState=false;
+                }
+            }
           }
           else {
-              this.emit(':tell', 'The ' + amenity + ' is currently open and will remain open for ' + hoursRemaining + ' more hours. The full hours are ' + standardTime.openingTime + ' to ' +  standardTime.closingTime);
+            this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time. If you would like something else, please ask. If not, say done.', 'Would you like anything else? If not, say done.');
           }
         });
-      });
-    });
-  },
+    },
+    'HotelInfoLocationIntent': function () {
+        let amenity = this.event.request.intent.slots.amenity.value;
+        console.info("Amenity: " + amenity);
+        amenityService.getAmenity(amenity, amenityInfo => {
+            console.info("Amenity Info: " + JSON.stringify(amenityInfo.Index));
+            amenityService.getStandardTime(amenityInfo.OpeningHour, amenityInfo.ClosingHour, standardTime => {
+                console.info("Amenity info standard: " + JSON.stringify(standardTime));
+                amenityService.getHoursRemaining(amenityInfo, hoursRemaining => {
+                    var imageObj = {
+                        smallImageUrl: amenitiesBucketPath + JSON.stringify(amenityInfo.Index) + '.jpg',
+                        largeImageUrl: amenitiesBucketPath + JSON.stringify(amenityInfo.Index) + '.jpg'
+                    };
+                    cardTitle = JSON.stringify(amenityInfo.Amenity);
+                    cardContent = "Opening Hour: " + standardTime.openingTime + " Closing Hour: " + standardTime.closingTime;
+                    this.emit(':tell', amenityInfo.Location + '. It is currently closed. The hours are ' + standardTime.openingTime + ' to ' +  standardTime.closingTime);                      });
+            });
+        });
+    },
+    'HotelInfoHoursIntent': function () {
+        let amenity = this.event.request.intent.slots.amenity.value;
+        console.info("Amenity: " + amenity);
+        amenityService.getAmenity(amenity, amenityInfo => {
+            console.info("Amenity Info: " + JSON.stringify(amenityInfo.Index));
+            amenityService.getStandardTime(amenityInfo.OpeningHour, amenityInfo.ClosingHour, standardTime => {
+                console.info("Amenity info standard: " + JSON.stringify(standardTime));
+                amenityService.getHoursRemaining(amenityInfo, hoursRemaining => {
+                    let imageObj = {
+                        smallImageUrl: amenitiesBucketPath + JSON.stringify(amenityInfo.Index) + '.jpg',
+                        largeImageUrl: amenitiesBucketPath + JSON.stringify(amenityInfo.Index) + '.jpg'
+                    };
+                    cardTitle = JSON.stringify(amenityInfo.Amenity);
+                    cardContent = "Opening Hour: " + standardTime.openingTime + " Closing Hour: " + standardTime.closingTime;
+                    if (hoursRemaining < 1) {
+                        this.emit(':tell', 'The ' + amenity + 'is currently closed. The hours are ' + standardTime.openingTime + ' to ' + standardTime.closingTime);
+                    }
+                    else {
+                        this.emit(':tell', 'The ' + amenity + ' is currently open and will remain open for ' + hoursRemaining + ' more hours. The full hours are ' + standardTime.openingTime + ' to ' + standardTime.closingTime);
+                    }
+                });
+            });
+        });
+    },
 
   'FoodServiceIntent': function() {
       let food = this.event.request.intent.slots.foodItem.value;

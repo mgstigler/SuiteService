@@ -10,8 +10,13 @@ let deviceId = null;
 let guestInformation = null;
 let cardTitle = '';
 let cardContent = '';
+let SessionState = false;
 let bucketPath = "https://s3.amazonaws.com/food-menu-images/";
 let amenitiesBucketPath = "https://s3.amazonaws.com/amenities-images/";
+
+let sessionState = false;
+let doneService ='';
+
 module.exports.SuiteService = (event, context, callback) => {
     let alexa = Alexa.handler(event, context, callback);
     console.info(JSON.stringify(event));
@@ -27,50 +32,78 @@ module.exports.SuiteService = (event, context, callback) => {
     });
 };
 let handlers = {
+    //I love you maddie
     //Handles the launch request
     'LaunchRequest': function () {
-        this.emit(':ask', 'Welcome to Suite Service, ' + guestInformation.FName + '!', 'Try saying food service.');
+        this.emit(':ask', guestInformation.FName + ', Welcome to Suite Service, your personal front desk assistant. What can I help you with today?', 'Would you like something delivered to your room?');
     },
+    
     'RequestSingularServiceIntent': function () {
         let service = this.event.request.intent.slots.requestedSingularService.value;
+        // if (sessionState==true) { // user has initiated intent and said "yes"
+        //     response = 'Sure, we will also send ' + service + ' to your room. Anything else?';
+        // }
+        // else if (sessionState == false) { // user has not initiated intent 
+        //     response = 'Sure, ' + guestInformation.FName + ', We can send a' + service + ' to you in room ' + guestInformation.RoomNumber + '. Would you like anything else?';
+        // }
         console.info("Service: " + service);
         let message = "Please send " + service + " to Laura.";
         lookupService_1.lookupService.slotExists(service, "ServiceLookup", slotFound => {
             if (slotFound) {
-                alertService_1.alertService.addAlert(guestInformation, service);
-                this.emit(':tell', 'Of course. We will send ' + service + ' to your room right away ' + guestInformation.FName);
+                if (SessionState==false){
+                    SessionState=true;
+                    alertService_1.alertService.addAlert(guestInformation, service);
+                    this.emit(':ask', 'Ok ' + guestInformation.FName + ' , We can send a ' + service + ' to you in room ' + guestInformation.RoomNumber + '. If you would like anything else, please ask. If not, say done');
+                    doneService = service;
+                }
+                else {
+                    this.emit (':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
+                    SessionState=false;
+                }
             }
             else {
                 this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time.');
+                SessionState=false;
             }
         });
+    },
+    'DoneIntent': function () {
+        this.emit(':tell', 'Ok, you will receive a text when your ' + doneService + ' is on the way.');
+        SessionState=false; 
+        doneService='';       
     },
     'RequestedPluralServiceIntent': function () {
         let number = this.event.request.intent.slots.requestNumber.value;
         let service = this.event.request.intent.slots.requestedPluralService.value;
+        doneService=service;
         console.info("Service: " + service);
         lookupService_1.lookupService.slotExists(service, "ServiceLookup", slotFound => {
-            if (slotFound) {
-                let intentObj = this.event.request.intent;
-                if (intentObj.slots.requestNumber.confirmationStatus !== 'CONFIRMED') {
-                    if (intentObj.slots.requestNumber.confirmationStatus !== 'DENIED') {
-                        // Slot value is not confirmed
-                        let speechOutput = 'You want ' + intentObj.slots.requestNumber.value + ' ' + service + ', is that correct?';
-                        this.emit(':confirmSlot', 'requestNumber', speechOutput, speechOutput);
-                    }
-                    else {
-                        // Users denies the confirmation of slot value
-                        let speechOutput = 'Okay, how many would you like?';
-                        this.emit(':elicitSlot', 'requestNumber', speechOutput, speechOutput);
-                    }
+          if (slotFound) {
+            var intentObj = this.event.request.intent;
+            if (intentObj.slots.requestNumber.confirmationStatus !== 'CONFIRMED') {
+              if (intentObj.slots.requestNumber.confirmationStatus !== 'DENIED') {
+                // Slot value is not confirmed
+                var speechOutput = 'You want ' + intentObj.slots.requestNumber.value + ' ' + service + ', is that correct?';
+                this.emit(':confirmSlot', 'requestNumber', speechOutput, speechOutput);
+              } else {
+                // Users denies the confirmation of slot value
+                var speechOutput = 'Okay, how many would you like?';
+                this.emit(':elicitSlot', 'requestNumber', speechOutput, speechOutput);
+              }
+            }  else {  
+                if (SessionState==false){
+                    SessionState=true;  
+                    this.emit(':ask', 'Ok. We can send ' + number + service + ' to your room. If you would like anything else, please ask. If not, say done');
                 }
                 else {
-                    this.emit(':tell', 'Great. We will send ' + number + service + ' to your room right away.');
+                    this.emit (':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
+                    SessionState=false;
                 }
             }
-            else {
-                this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time.');
-            }
+          }
+          else {
+            this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time. If you would like something else, please ask. If not, say done.', 'Would you like anything else? If not, say done.');
+          }
         });
     },
     'HotelInfoLocationIntent': function () {
@@ -80,15 +113,14 @@ let handlers = {
             console.info("Amenity Info: " + JSON.stringify(amenityInfo.Index));
             amenityService_1.amenityService.getStandardTime(amenityInfo.OpeningHour, amenityInfo.ClosingHour, standardTime => {
                 console.info("Amenity info standard: " + JSON.stringify(standardTime));
-                amenityService_1.amenityService.getHoursRemaining(amenityInfo, hoursRemaining => {
+                amenityService_1.amenistyService.getHoursRemaining(amenityInfo, hoursRemaining => {
                     var imageObj = {
                         smallImageUrl: amenitiesBucketPath + JSON.stringify(amenityInfo.Index) + '.jpg',
                         largeImageUrl: amenitiesBucketPath + JSON.stringify(amenityInfo.Index) + '.jpg'
                     };
                     cardTitle = JSON.stringify(amenityInfo.Amenity);
                     cardContent = "Opening Hour: " + standardTime.openingTime + " Closing Hour: " + standardTime.closingTime;
-                    this.emit(':tellWithCard', 'The hours are ' + standardTime.openingTime + ' to ' + standardTime.closingTime + ' and you have ' + hoursRemaining + ' hours remaining.', cardTitle, cardContent, imageObj);
-                });
+                    this.emit(':tell', amenityInfo.Location + '. It is currently closed. The hours are ' + standardTime.openingTime + ' to ' +  standardTime.closingTime);                      });
             });
         });
     },
@@ -126,7 +158,7 @@ let handlers = {
                         if (this.event.request.intent.slots.foodItem.confirmationStatus !== 'DENIED') {
                             // guest has not added to order
                             console.info("Food Info: " + JSON.stringify(foodInfo.Index));
-                            this.emit(':confirmSlot', 'foodItem', 'Would you like ' + foodInfo.Pairing + ' with that?', 'Would you like ' + foodInfo.Pairing + ' with that?');
+                            this.emit(':confirmSlot', 'foodItem', 'Ok, we have added ' + food + ' to your order. Would you like ' + foodInfo.Pairing + ' with that?', 'Would you like ' + foodInfo.Pairing + ' with that?');
                         }
                         else {
                             // guest says no nothing else
@@ -139,7 +171,7 @@ let handlers = {
                             cardTitle = JSON.stringify(foodInfo.FoodItem);
                             cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) + " Price: $" + foodInfo.Price;
                             alertService_1.alertService.addAlert(guestInformation, food);
-                            this.emit(':tellWithCard', 'We are sending ' + food + ' your way, ' + guestInformation.FName, cardTitle, cardContent, imageObj);
+                            this.emit(':tellWithCard', 'Ok, no problem. We will send ' + food + ' to room ' + guestInformation.RoomNumber + ' right away. That will be ' + foodInfo.Price + ' dollars. You will get a text when your order is on the way', cardTitle, cardContent, imageObj);
                         }
                     }
                     else {
@@ -156,7 +188,7 @@ let handlers = {
                             cardTitle = 'Ordering ' + food + ' and ' + JSON.stringify(foodInfo.Pairing);
                             cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) + " Total Price: $" + totalPrice;
                             alertService_1.alertService.addAlert(guestInformation, food);
-                            this.emit(':tellWithCard', 'The total price is ' + totalPrice + ' We are sending ' + food + ' and ' + foodInfo.Pairing + ' your way, ' + guestInformation.FName, cardTitle, cardContent, imageObj);
+                            this.emit(':tellWithCard', 'Great, We will submit your order for ' + food + ' and ' + foodInfo.Pairing + '. The total cost is ' + totalPrice + ' dollars. You will get a text when the order is on the way.', cardTitle, cardContent, imageObj);
                         });
                     }
                 });
