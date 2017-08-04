@@ -115,7 +115,13 @@ let handlers = {
                     };
                     cardTitle = JSON.stringify(amenityInfo.Amenity);
                     cardContent = "Opening Hour: " + standardTime.openingTime + " Closing Hour: " + standardTime.closingTime;
-                    this.emit(':tell', amenityInfo.Location + '. It is currently closed. The hours are ' + standardTime.openingTime + ' to ' +  standardTime.closingTime);                      });
+                    if (hoursRemaining < 1) {
+                        this.emit(':tell', amenityInfo.Location + '. It is currently closed. The hours are ' + standardTime.openingTime + ' to ' +  standardTime.closingTime);                      
+                    }
+                    else {
+                        this.emit(':tell', 'The ' + amenity + ' is currently open and will remain open for ' + hoursRemaining + ' more hours. The full hours are ' + standardTime.openingTime + ' to ' + standardTime.closingTime);                        
+                    }  
+                 }); 
             });
         });
     },
