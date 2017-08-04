@@ -38,6 +38,33 @@ class GuestService {
             }
         });
     }
+    checkoutGuest(deviceId, callback) {
+        var docClient = new AWS.DynamoDB.DocumentClient();
+        var params = {
+            TableName: "Guests",
+            Key: {
+                "AlexaId": deviceId
+            },
+            UpdateExpression: "set FName = :f, LName = :l, CheckIn = :i, CheckOut = :o, PhoneNumber = :p",
+            ExpressionAttributeValues: {
+                ":f": null,
+                ":l": null,
+                ":p": null,
+                ":o": null,
+                ":i": null
+            },
+            ReturnValues: "UPDATED_NEW"
+        };
+        console.log("Updating the item...");
+        docClient.update(params, function (err, data) {
+            if (err) {
+                console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
+            }
+            else {
+                console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+            }
+        });
+    }
 }
 exports.GuestService = GuestService;
 exports.guestService = new GuestService();

@@ -189,6 +189,14 @@ let handlers = {
     alertService.addReservationAlert(guestInformation, days);
     this.emit(':tell', 'Your request to extend your stay by ' + days + ' days has been sent in.  You will receive a text when it has been accepted.');
   },
+
+  'CheckOutIntent': function() {
+    guestService.checkoutGuest(deviceId, success => {
+        alertService.alertGuest('Thank you for staying with us.', guestInformation.PhoneNumber, null);
+        this.emit(':tell', 'You are checked out.  Thank you for staying with us!  Come back soon.');
+    })
+  },
+
   'AMAZON.StopIntent': function () {
   // State Automatically Saved with :tell
   this.emit(':tell', `Goodbye.`);
