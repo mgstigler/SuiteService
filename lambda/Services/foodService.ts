@@ -34,6 +34,14 @@ export class FoodService {
 
     }
 
+    getFoodPrice(foodItem: string, callback) {
+        let price = 0;
+        this.getFoodInformation(foodItem, foodinfo => {
+            price = foodinfo.Price;
+            callback(price);
+        });
+    }
+
     updateRating(foodItem: foodModel) {
         let params = {
             TableName:"FoodService",
