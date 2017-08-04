@@ -7,25 +7,15 @@
       "intent": "AMAZON.HelpIntent"
     },
 
-    //     {
-    //   "intent": "FoodServiceIntent",
-    //   "slots":[
-    //     {
-    //       "name":"foodItem",
-    //       "type":"LIST_OF_MENU_ITEMS"
-    //     }
-    //   ]
-    // },
-
     { 
-    "intent": "DoneIntent",
+     "intent": "DoneIntent",
     "slots": [
       {
       "name": "Done",
       "type":"DONE_SLOTS"
       }
-      ]
-    },
+      ]    
+      },
     {
       "intent": "AMAZON.StopIntent"
     },
@@ -51,6 +41,18 @@
         }
       ],
       "intent": "RequestSingularServiceIntent"
+    },
+    {"intent": "ForgotIntent",
+    "slots":[
+      {
+        "name": "itemNeeded",
+        "type": "SERVICE"
+      },
+      {
+        "name": "requestNumber",
+        "type": "AMAZON.NUMBER"       
+      }
+      ] 
     },
     //     {
     //   "intent": "FoodServiceIntent",
@@ -79,7 +81,7 @@
     },
     {
       "intent": "MenuIntent"
-    }, 
+          }, 
     {
       "intent": "CheckOutIntent"
     }

@@ -23,7 +23,7 @@ module.exports.SuiteService = (event, context, callback) => {
     // alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
     // Uncomment below when testing with an actual device
     deviceId = event.context.System.device.deviceId;
-    //deviceId = "amzn1.ask.device.AEDESKFZ4SBJNWU3M7EXRX7NJL5DTLKLAP2KRVBKYQ5PYRNQRUWZBSUKWWWW4DDJOCZE3WC2XBWJHQJ4PVMN5HBHLY4UHSK5W76VCAJ5L7NNSIRNHHSTG5WA66NRWQCWJ22R2LGSICQHW2SFNV6V3EIVVCUA";
+    // deviceId = "amzn1.ask.device.AEDESKFZ4SBJNWU3M7EXRX7NJL5DTLKLAP2KRVBKYQ5PYRNQRUWZBSUKWWWW4DDJOCZE3WC2XBWJHQJ4PVMN5HBHLY4UHSK5W76VCAJ5L7NNSIRNHHSTG5WA66NRWQCWJ22R2LGSICQHW2SFNV6V3EIVVCUA";
     console.info(deviceId);
     guestService_1.guestService.getGuestInformation(deviceId, guestInfo => {
         guestInformation = guestInfo;
@@ -35,7 +35,7 @@ let handlers = {
     //I love you maddie
     //Handles the launch request
     'LaunchRequest': function () {
-        this.emit(':ask', guestInformation.FName + ', Welcome to Suite Service, your personal front desk assistant. What can I help you with today?', 'What would you like delivered to your room?');
+        this.emit(':ask', guestInformation.FName + ', Welcome to Suite Service, your personal front desk assistant. What can I help you with today?', 'If you need something, please ask?');
     },
     
     'RequestSingularServiceIntent': function () {
@@ -48,7 +48,7 @@ let handlers = {
                     SessionState=true;
                     alertService_1.alertService.addAlert(guestInformation, service);
                     this.emit(':ask', 'Ok ' + guestInformation.FName + ' , We can send a ' + service + ' to you in room ' + guestInformation.RoomNumber + '. If you would like anything else, please ask. If not, say done');
-                    doneService = service;
+                    doneService = service + 'is';
                 }
                 else {
                     this.emit (':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
@@ -62,7 +62,7 @@ let handlers = {
         });
     },
     'DoneIntent': function () {
-        this.emit(':tell', 'Ok, you will receive a text when your ' + doneService + ' is on the way.');
+        this.emit(':tell', 'Ok, you will receive a text when your ' + doneService + ' on the way.');
         SessionState=false; 
         doneService='';       
     },
@@ -88,10 +88,10 @@ let handlers = {
                 if (SessionState==false){
                     SessionState=true;  
                     this.emit(':ask', 'Ok. We can send ' + number + service + ' to your room. If you would like anything else, please ask. If not, say done');
-                    doneService=service;
+                    doneService=service + 'are';
                 }
                 else {
-                    this.emit (':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
+                    this.emit (':tell', 'Ok, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
                     SessionState=false;
                 }
             }
@@ -101,6 +101,41 @@ let handlers = {
           }
         });
     },
+    // 'ForgotIntent': function(){
+    //     let number = 0;
+    //     let service = this.event.request.intent.slots.itemNeeded.value;
+    //     doneService=service;
+    //     console.info("Service: " + service);
+    //     lookupService_1.lookupService.slotExists(service, "ServiceLookup", slotFound => {
+    //       if (slotFound) {
+    //         var intentObj = this.event.request.intent;
+    //         if (intentObj.slots.requestNumber.confirmationStatus !== 'CONFIRMED') {
+    //           if (intentObj.slots.requestNumber.confirmationStatus !== 'DENIED') {
+    //             // Slot value is not confirmed
+    //             var speechOutput = 'No problem, we can help you. How many ' + service + 'do you need?';
+    //             this.emit(':confirmSlot', 'requestNumber', speechOutput, speechOutput);
+    //           } else {
+    //             // Users denies the confirmation of slot value
+    //             var speechOutput = 'Im sorry, how many would you like?';
+    //             this.emit(':elicitSlot', 'requestNumber', speechOutput, speechOutput);
+    //           }
+    //         }  else {  
+    //             if (SessionState==false){
+    //                 SessionState=true;  
+    //                 this.emit(':ask', 'Ok. We can send ' + number + service + ' to your room. If you would like anything else, please ask. If not, say done');
+    //                 doneService=service + 'are';
+    //             }
+    //             else {
+    //                 this.emit (':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
+    //                 SessionState=false;
+    //             }
+    //         }
+    //       }
+    //       else {
+    //         this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time. If you would like something else, please ask. If not, say done.', 'Would you like anything else? If not, say done.');
+    //       }
+    //     });
+    // },
     'HotelInfoLocationIntent': function () {
         let amenity = this.event.request.intent.slots.amenity.value;
         console.info("Amenity: " + amenity);
@@ -154,7 +189,7 @@ let handlers = {
         lookupService_1.lookupService.slotExists(food, "MenuLookup", slotFound => {
             if (slotFound) {
                 console.info("slot found");
-                foodService_1.foodService.getFoodInformation(food, foodInfo => {
+                foodService_1.foodService.getFoodInformation(slotFound.ItemNoArticle, foodInfo => {
                     if (this.event.request.intent.slots.foodItem.confirmationStatus !== 'CONFIRMED') {
                         if (this.event.request.intent.slots.foodItem.confirmationStatus !== 'DENIED') {
                             // guest has not added to order
@@ -196,7 +231,7 @@ let handlers = {
             }
             else {
                 console.info("item not found");
-                this.emit(':ask', 'We are sorry.  We are not serving ' + food + ' at this moment. Is there something else I can get for you?', 'What can I do for you?');
+                this.emit(':ask', 'We are sorry.  We are not serving ' + food + ' at this moment. If you would like something else, please ask.', 'Ask me for something else if you would like');
             }
         });
     },
