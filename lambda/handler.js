@@ -35,7 +35,7 @@ let handlers = {
     //I love you maddie
     //Handles the launch request
     'LaunchRequest': function () {
-        this.emit(':ask', guestInformation.FName + ', Welcome to Suite Service, your personal front desk assistant. What can I help you with today?', 'Would you like something delivered to your room?');
+        this.emit(':ask', guestInformation.FName + ', Welcome to Suite Service, your personal front desk assistant. What can I help you with today?', 'What would you like delivered to your room?');
     },
     
     'RequestSingularServiceIntent': function () {
@@ -108,7 +108,7 @@ let handlers = {
             console.info("Amenity Info: " + JSON.stringify(amenityInfo.Index));
             amenityService_1.amenityService.getStandardTime(amenityInfo.OpeningHour, amenityInfo.ClosingHour, standardTime => {
                 console.info("Amenity info standard: " + JSON.stringify(standardTime));
-                amenityService_1.amenistyService.getHoursRemaining(amenityInfo, hoursRemaining => {
+                amenityService_1.amenityService.getHoursRemaining(amenityInfo, hoursRemaining => {
                     var imageObj = {
                         smallImageUrl: amenitiesBucketPath + JSON.stringify(amenityInfo.Index) + '.jpg',
                         largeImageUrl: amenitiesBucketPath + JSON.stringify(amenityInfo.Index) + '.jpg'
@@ -119,7 +119,7 @@ let handlers = {
                         this.emit(':tell', amenityInfo.Location + '. It is currently closed. The hours are ' + standardTime.openingTime + ' to ' +  standardTime.closingTime);                      
                     }
                     else {
-                        this.emit(':tell', 'The ' + amenity + ' is currently open and will remain open for ' + hoursRemaining + ' more hours. The full hours are ' + standardTime.openingTime + ' to ' + standardTime.closingTime);                        
+                        this.emit(':tell', amenityInfo.Location + '. It is currently open and will remain open for ' + hoursRemaining + ' more hours. The full hours are ' + standardTime.openingTime + ' to ' + standardTime.closingTime);                        
                     }  
                  }); 
             });
@@ -159,7 +159,7 @@ let handlers = {
                         if (this.event.request.intent.slots.foodItem.confirmationStatus !== 'DENIED') {
                             // guest has not added to order
                             console.info("Food Info: " + JSON.stringify(foodInfo.Index));
-                            this.emit(':confirmSlot', 'foodItem', 'Ok, we have added ' + food + ' to your order. Would you like ' + foodInfo.Pairing + ' with that?', 'Would you like ' + foodInfo.Pairing + ' with that?');
+                            this.emit(':confirmSlot', 'foodItem', 'Ok, we can submit a room service order for ' + food + '. Would you like ' + foodInfo.Pairing + ' with that?', 'Would you like ' + foodInfo.Pairing + ' with that?');
                         }
                         else {
                             // guest says no nothing else
