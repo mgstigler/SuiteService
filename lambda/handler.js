@@ -216,7 +216,7 @@ let handlers = {
                         foodService_1.foodService.updateRating(foodInfo);
                          //foodService get price of pairing
                         foodService_1.foodService.getFoodPrice(foodInfo.Pairing, pairingPrice => {
-                            let totalPrice = pairingPrice + foodInfo.Price;
+                            let totalPrice = foodInfo.CombinedPrice;
                        var imageObj = {
                             smallImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg',
                             largeImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg'
