@@ -55,6 +55,8 @@ class InfoModal extends React.Component {
             var firstName = this.state.roomInfo.FName;
             var lastName = this.state.roomInfo.LName;
             var phone = this.state.roomInfo.PhoneNumber;
+            var checkin = this.state.roomInfo.CheckIn != null ? (new Date(Number(this.state.roomInfo.CheckIn))).toDateString() : "";
+            var checkout = this.state.roomInfo.CheckOut != null ? (new Date(Number(this.state.roomInfo.CheckOut))).toDateString() : "";
         }
 
         return (
@@ -75,13 +77,16 @@ class InfoModal extends React.Component {
                                 <tr>
                                     <th>Name</th>
                                     <th>Phone Number</th>
-                                    
+                                    <th>Check-In Date</th>
+                                    <th>Check-Out Date</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>{firstName} {lastName}</td>
                                     <td>{phone}</td>
+                                    <td>{checkin}</td>
+                                    <td>{checkout}</td>
                                 </tr>
                             </tbody>
                         </Table>
