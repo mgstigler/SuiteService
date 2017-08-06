@@ -11,6 +11,7 @@ class Reservation extends React.Component {
         super(props);
         this.state = {
             roomNumber: props.roomNumber,
+            phoneNumber: props.phoneNumber,
             firstName: props.fName,
             lastName: props.lName,
             message: props.message,
@@ -23,6 +24,7 @@ class Reservation extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({roomNumber: nextProps.roomNumber}); 
+        this.setState({phoneNumber: nextProps.phoneNumber}); 
         this.setState({firstName: nextProps.fName});
         this.setState({lastName: nextProps.lName});
         this.setState({message: nextProps.message});
@@ -35,9 +37,14 @@ class Reservation extends React.Component {
         var _this = this;
         axios.post("https://plocf3fmt2.execute-api.us-east-1.amazonaws.com/dev/reservations", {
             RoomNumber: this.state.roomNumber,
+            PhoneNumber: this.state.phoneNumber,
+            FName: this.state.firstName,
+            LName: this.state.lastName,
+            Message: this.state.message,
             CheckIn: this.state.checkIn,
             CheckOut: this.state.checkOut,
         }).then(function(response){
+            console.log(response);
             var msg = 'Reservation was extended successfully. ' + _this.state.firstName + ' has been notified.';
             _this.props.showAlert(msg, 'success', 'check', '#19a745');
             _this.props.getAlerts();

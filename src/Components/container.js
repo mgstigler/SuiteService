@@ -48,7 +48,7 @@ class Container extends React.Component {
   }
 
   handleStartDateChange(date) {
-    var newDate = new Date(date._d);
+    var newDate = new Date((date._d).getTime() + 14400000);
     this.setState({
       startDate: date,
       startDateSeconds: newDate.getTime()
@@ -56,7 +56,7 @@ class Container extends React.Component {
   }
 
   handleEndDateChange(date) {
-    var newDate = new Date(date._d);
+    var newDate = new Date((date._d).getTime() + 14400000);
     this.setState({
       endDate: date,
       endDateSeconds: newDate.getTime()
@@ -319,8 +319,8 @@ class Container extends React.Component {
                     return (
                       <Reservation key={i} roomNumber={res.RoomNumber} fName={res.FName} lName={res.LName}
                       message={res.Message} showAlert={this.showAlert} checkIn={res.CheckIn} 
-                      checkOut={res.CheckOut} timestamp={res.Timestamp} 
-                      getReservationRequests={this.getReservationRequests}/>
+                      checkOut={res.CheckOut} timestamp={res.Timestamp} phoneNumber={res.PhoneNumber}
+                      getReservationRequests={this.getReservationRequests} getAlerts={this.getAlerts}/>
                     );
                   })}
                 </tbody>
