@@ -320,7 +320,7 @@ class Container extends React.Component {
                       <Reservation key={i} roomNumber={res.RoomNumber} fName={res.FName} lName={res.LName}
                       message={res.Message} showAlert={this.showAlert} checkIn={res.CheckIn} 
                       checkOut={res.CheckOut} timestamp={res.Timestamp} phoneNumber={res.PhoneNumber}
-                      getReservationRequests={this.getReservationRequests} getAlerts={this.getAlerts}/>
+                      getReservationRequests={this.getReservationRequests}/>
                     );
                   })}
                 </tbody>

@@ -47,7 +47,7 @@ class Reservation extends React.Component {
             console.log(response);
             var msg = 'Reservation was extended successfully. ' + _this.state.firstName + ' has been notified.';
             _this.props.showAlert(msg, 'success', 'check', '#19a745');
-            _this.props.getAlerts();
+            _this.props.getReservationRequests();
         }).catch(function(error){
             console.log(error);
             var msg = "There was an error extending the reservation.";
