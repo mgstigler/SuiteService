@@ -6,7 +6,7 @@ import FontAwesome from 'react-fontawesome';
 /**
  * A counter button: tap the button to increase the count.
  */
-class Alert extends React.Component {
+class Reservation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -14,9 +14,9 @@ class Alert extends React.Component {
             firstName: props.fName,
             lastName: props.lName,
             message: props.message,
-            phoneNumber: props.phoneNumber,
             timestamp: props.timestamp,
-            service: props.service
+            checkIn: props.checkIn,
+            checkOut: props.checkOut
         };
         this.sendAlertUpdate = this.sendAlertUpdate.bind(this);
     } 
@@ -26,41 +26,41 @@ class Alert extends React.Component {
         this.setState({firstName: nextProps.fName});
         this.setState({lastName: nextProps.lName});
         this.setState({message: nextProps.message});
-        this.setState({phoneNumber: nextProps.phoneNumber});
         this.setState({timestamp: nextProps.timestamp});
-        this.setState({service: nextProps.service});
+        this.setState({checkIn: nextProps.checkIn});
+        this.setState({checkOut: nextProps.checkOut});
     }
 
     sendAlertUpdate() {
         var _this = this;
-        axios.post("https://plocf3fmt2.execute-api.us-east-1.amazonaws.com/dev/alerts", {
+        axios.post("https://plocf3fmt2.execute-api.us-east-1.amazonaws.com/dev/reservations", {
             RoomNumber: this.state.roomNumber,
-            FName: this.state.firstName,
-            LName: this.state.lastName,
-            PhoneNumber: this.state.phoneNumber,
-            Message: this.state.message
+            CheckIn: this.state.checkIn,
+            CheckOut: this.state.checkOut,
         }).then(function(response){
-            var msg = 'Request was successful. ' + _this.state.firstName + ' has been notified.';
+            var msg = 'Reservation was extended successfully. ' + _this.state.firstName + ' has been notified.';
             _this.props.showAlert(msg, 'success', 'check', '#19a745');
             _this.props.getAlerts();
         }).catch(function(error){
             console.log(error);
-            var msg = "There was an error sending the alert request.";
+            var msg = "There was an error extending the reservation.";
             _this.props.showAlert(msg, 'error', 'times', '#E74C3C');
         })
     }
 
     render() {
-      return (
-        <tr className="alertRow">
-            <td>{this.state.timestamp.Month}/{this.state.timestamp.Date}</td>
-            <td style={{textAlign: 'center'}}>{this.state.roomNumber}</td>
-            <td>{this.state.firstName} {this.state.lastName}</td>
-            <td style={{fontSize: '13.5px'}}>{this.state.service}</td>
-            <td className="requestIcon" onClick={this.sendAlertUpdate}><FontAwesome name="check-circle-o" size="2x"/></td>
-        </tr>
+        var startDate = (new Date(Number(this.state.checkIn))).toDateString();
+        var newEndDate = (new Date(Number(this.state.checkOut))).toDateString();
+        return (
+            <tr className="resRow">
+                <td>{this.state.roomNumber}</td>
+                <td>{this.state.firstName} {this.state.lastName}</td>
+                <td>{startDate}</td>
+                <td>{newEndDate}</td>
+                <td className="requestIcon" onClick={this.sendAlertUpdate}><FontAwesome name="check-circle-o" size="2x"/></td>
+            </tr>
     );
   }
 }
 
-export default Alert;
+export default Reservation;
