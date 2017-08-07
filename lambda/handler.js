@@ -22,8 +22,8 @@ module.exports.SuiteService = (event, context, callback) => {
     console.info(JSON.stringify(event));
     // alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
     // Uncomment below when testing with an actual device
-    deviceId = event.context.System.device.deviceId;
-    // deviceId = "amzn1.ask.device.AEDESKFZ4SBJNWU3M7EXRX7NJL5DTLKLAP2KRVBKYQ5PYRNQRUWZBSUKWWWW4DDJOCZE3WC2XBWJHQJ4PVMN5HBHLY4UHSK5W76VCAJ5L7NNSIRNHHSTG5WA66NRWQCWJ22R2LGSICQHW2SFNV6V3EIVVCUA";
+    // deviceId = event.context.System.device.deviceId;
+    deviceId = "amzn1.ask.device.AEDESKFZ4SBJNWU3M7EXRX7NJL5DTLKLAP2KRVBKYQ5PYRNQRUWZBSUKWWWW4DDJOCZE3WC2XBWJHQJ4PVMN5HBHLY4UHSK5W76VCAJ5L7NNSIRNHHSTG5WA66NRWQCWJ22R2LGSICQHW2SFNV6V3EIVVCUA";
     console.info(deviceId);
     guestService_1.guestService.getGuestInformation(deviceId, guestInfo => {
         guestInformation = guestInfo;
@@ -62,6 +62,7 @@ let handlers = {
         });
     },
     'DoneIntent': function () {
+        alertService_1.alertService.addAlert(guestInformation, doneService);
         this.emit(':tell', 'Ok, you will receive a text when your ' + doneService + ' on the way.');
         SessionState=false; 
         doneService='';       
@@ -86,12 +87,16 @@ let handlers = {
               }
             }  else {  
                 if (SessionState==false){
+                    let services = number + ' ' + service;
+                    alertService_1.alertService.addAlert(guestInformation, services);
                     SessionState=true;  
                     this.emit(':ask', 'Ok. We can send ' + number + service + ' to your room. If you would like anything else, please ask. If not, say done');
                     doneService=service + 'are';
                 }
                 else {
-                    this.emit (':tell', 'Ok, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
+                    let services = number + ' ' + service;
+                    alertService_1.alertService.addAlert(guestInformation, services);                    
+                    this.emit (':tell', 'Ok, we can add ' + number + service + ' to your request. You will receive a text when everything is on its way.')
                     SessionState=false;
                 }
             }
@@ -150,7 +155,8 @@ let handlers = {
                     };
                     cardTitle = JSON.stringify(amenityInfo.Amenity);
                     cardContent = "Opening Hour: " + standardTime.openingTime + " Closing Hour: " + standardTime.closingTime;
-                    if (hoursRemaining < 1) {
+                    if (hoursRemaining == 0) {
+                        console.log("hours remaining" + hoursRemaining);
                         this.emit(':tell', amenityInfo.Location + '. It is currently closed. The hours are ' + standardTime.openingTime + ' to ' +  standardTime.closingTime);                      
                     }
                     else {
@@ -186,6 +192,7 @@ let handlers = {
     },
     'FoodServiceIntent': function () {
         let food = this.event.request.intent.slots.foodItem.value;
+        console.info("food" + food);
         lookupService_1.lookupService.slotExists(food, "MenuLookup", slotFound => {
             if (slotFound) {
                 console.info("slot found");
@@ -223,14 +230,16 @@ let handlers = {
                         };
                            cardTitle = 'Ordering ' + food + ' and ' + JSON.stringify(foodInfo.Pairing);
                             cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) + " Total Price: $" + totalPrice;
-                         alertService_1.alertService.addAlert(guestInformation, food);
-                             this.emit(':tellWithCard', 'Great, We will submit your order for ' + food + ' and ' + foodInfo.Pairing + '. The total cost is ' + totalPrice + ' dollars. You will get a text when the order is on the way.', cardTitle, cardContent, imageObj);
+                            let combinedFood = food + foodInfo.Pairing;
+                            alertService_1.alertService.addAlert(guestInformation, combinedFood);
+                            this.emit(':tellWithCard', 'Great, We will submit your order for ' + food + ' and ' + foodInfo.Pairing + '. The total cost is ' + totalPrice + ' dollars. You will get a text when the order is on the way.', cardTitle, cardContent, imageObj);
                         });
                     }
                 });
             }
             else {
                 console.info("item not found");
+                console.info("not defined" + food);
                 this.emit(':ask', 'We are sorry.  We are not serving ' + food + ' at this moment. If you would like something else, please ask.', 'Ask me for something else if you would like');
             }
         });
@@ -244,7 +253,7 @@ let handlers = {
             console.info("Menu: " + menu.speech);
             cardTitle = menu.speech + ' Menu';
             cardContent = menu.items.join(", and ");
-            this.emit(':askWithCard', 'We are serving ' + menu.speech + ' now.  This includes ' + menu.items[0] + ', ' + menu.items[1] + ', and more.  Place an order or say more', 'Okay', cardTitle, cardContent, imageObj);
+            this.emit(':askWithCard', 'We are serving ' + menu.speech + ' now.  This includes ' + menu.items[1] + ', ' + menu.items[0] + ', and more.  Place an order by starting with send me', 'Okay', cardTitle, cardContent, imageObj);
         });
     },
     'ExtendStayIntent': function () {
@@ -257,7 +266,7 @@ let handlers = {
             alertService_1.alertService.alertGuest('Thank you for staying with us.', guestInformation.PhoneNumber, null);
             this.emit(':tell', 'You are checked out.  Thank you for staying with us!  Come back soon.');
         });
-        },
+    },
     'AMAZON.StopIntent': function () {
         // State Automatically Saved with :tell
         this.emit(':tell', `Goodbye. Thanks for using SuiteService.`);

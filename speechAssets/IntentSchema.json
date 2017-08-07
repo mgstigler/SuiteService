@@ -80,8 +80,20 @@
       ] 
     },
     {
+      "slots": [
+        {
+          "name": "days",
+          "type": "AMAZON.NUMBER"
+        }
+      ],
+      "intent": "ExtendStayIntent"
+    },
+    {
       "intent": "MenuIntent"
-          }, 
+    }, 
+    {
+      "intent": "CheckOutIntent"
+    },
     {
       "intent": "CheckOutIntent"
     }
