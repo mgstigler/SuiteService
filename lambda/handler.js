@@ -23,7 +23,7 @@ module.exports.SuiteService = (event, context, callback) => {
     // alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
     // Uncomment below when testing with an actual device
     // deviceId = event.context.System.device.deviceId;
-    deviceId = "amzn1.ask.device.AEDESKFZ4SBJNWU3M7EXRX7NJL5DTLKLAP2KRVBKYQ5PYRNQRUWZBSUKWWWW4DDJOCZE3WC2XBWJHQJ4PVMN5HBHLY4UHSK5W76VCAJ5L7NNSIRNHHSTG5WA66NRWQCWJ22R2LGSICQHW2SFNV6V3EIVVCUA";
+    deviceId = "amzn1.ask.device.AHDZ6YTAZ5XFXJFIR6JGJ54OFQ7PJMFOFWH6YYGCKGU4IZHC73I76XKPBSWBNFOUMKE3ZLV5MMIDPDBDV5O5UZDBWOTWNFDKSVTDN7RBDHE7SAHLXPHHQSQK2FAAECUJJMK7F4NOHD6VF2TNC5XNNM2FJB5A";
     console.info(deviceId);
     guestService_1.guestService.getGuestInformation(deviceId, guestInfo => {
         guestInformation = guestInfo;
@@ -219,21 +219,21 @@ let handlers = {
                     }
                     else {
                         //guest says yes to pairing
+                        console.log("Guest info: " + guestInformation);
                         let message = "Please send " + food + " to Room " + guestInformation.RoomNumber;
                         foodService_1.foodService.updateRating(foodInfo);
                          //foodService get price of pairing
-                        foodService_1.foodService.getFoodPrice(foodInfo.Pairing, pairingPrice => {
-                            let totalPrice = foodInfo.CombinedPrice;
-                       var imageObj = {
+                        let totalPrice = foodInfo.CombinedPrice;
+                        var imageObj = {
                             smallImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg',
                             largeImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg'
                         };
-                           cardTitle = 'Ordering ' + food + ' and ' + JSON.stringify(foodInfo.Pairing);
-                            cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) + " Total Price: $" + totalPrice;
-                            let combinedFood = food + foodInfo.Pairing;
-                            alertService_1.alertService.addAlert(guestInformation, combinedFood);
-                            this.emit(':tellWithCard', 'Great, We will submit your order for ' + food + ' and ' + foodInfo.Pairing + '. The total cost is ' + totalPrice + ' dollars. You will get a text when the order is on the way.', cardTitle, cardContent, imageObj);
-                        });
+                        cardTitle = 'Ordering ' + food + ' and ' + JSON.stringify(foodInfo.Pairing);
+                        cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) + " Total Price: $" + totalPrice;
+                        let combinedFood = food + ' and ' + foodInfo.Pairing;
+                        console.log("food price combined:" + combinedFood);
+                        alertService_1.alertService.addAlert(guestInformation, combinedFood);
+                        this.emit(':tellWithCard', 'Great, We will submit your order for ' + combinedFood + '. The total cost is ' + totalPrice + ' dollars. You will get a text when the order is on the way.', cardTitle, cardContent, imageObj);
                     }
                 });
             }
@@ -262,7 +262,9 @@ let handlers = {
         this.emit(':tell', 'Your request to extend your stay by ' + days + ' days has been sent in.  You will receive a text when it has been accepted.');
     },
     'CheckOutIntent': function () {
+        console.log("deviceID" + deviceId);
         guestService_1.guestService.checkoutGuest(deviceId, success => {
+            console.log("deviceID" + deviceId);            
             alertService_1.alertService.alertGuest('Thank you for staying with us.', guestInformation.PhoneNumber, null);
             this.emit(':tell', 'You are checked out.  Thank you for staying with us!  Come back soon.');
         });

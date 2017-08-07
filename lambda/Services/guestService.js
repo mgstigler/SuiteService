@@ -62,6 +62,7 @@ class GuestService {
             }
             else {
                 console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+                callback (null);
             }
         });
     }
