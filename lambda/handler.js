@@ -13,17 +13,15 @@ let cardContent = '';
 let SessionState = false;
 let bucketPath = "https://s3.amazonaws.com/food-menu-images/";
 let amenitiesBucketPath = "https://s3.amazonaws.com/amenities-images/";
-
 let sessionState = false;
-let doneService ='';
-
+let doneService = '';
 module.exports.SuiteService = (event, context, callback) => {
     let alexa = Alexa.handler(event, context, callback);
     console.info(JSON.stringify(event));
     // alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
     // Uncomment below when testing with an actual device
     // deviceId = event.context.System.device.deviceId;
-    deviceId = "amzn1.ask.device.AHDZ6YTAZ5XFXJFIR6JGJ54OFQ7PJMFOFWH6YYGCKGU4IZHC73I76XKPBSWBNFOUMKE3ZLV5MMIDPDBDV5O5UZDBWOTWNFDKSVTDN7RBDHE7SAHLXPHHQSQK2FAAECUJJMK7F4NOHD6VF2TNC5XNNM2FJB5A";
+    deviceId = "amzn1.ask.device.AEDESKFZ4SBJNWU3M7EXRX7NJL5DTLKLAP2KRVBKYQ5PYRNQRUWZBSUKWWWW4DDJOCZE3WC2XBWJHQJ4PVMN5HBHLY4UHSK5W76VCAJ5L7NNSIRNHHSTG5WA66NRWQCWJ22R2LGSICQHW2SFNV6V3EIVVCUA";
     console.info(deviceId);
     guestService_1.guestService.getGuestInformation(deviceId, guestInfo => {
         guestInformation = guestInfo;
@@ -35,112 +33,78 @@ let handlers = {
     //I love you maddie
     //Handles the launch request
     'LaunchRequest': function () {
-        this.emit(':ask', guestInformation.FName + ', Welcome to Suite Service, your personal front desk assistant. What can I help you with today?', 'If you need something, please ask?');
+        this.emit(':ask', guestInformation.FName + ', Welcome to Suite Service, your personal front desk assistant. What can I help you with today?', 'Would you like something delivered to your room?');
     },
-    
     'RequestSingularServiceIntent': function () {
         let service = this.event.request.intent.slots.requestedSingularService.value;
         console.info("Service: " + service);
         let message = "Please send " + service + " to Laura.";
         lookupService_1.lookupService.slotExists(service, "ServiceLookup", slotFound => {
             if (slotFound) {
-                if (SessionState==false){
-                    SessionState=true;
+                if (SessionState == false) {
+                    SessionState = true;
                     alertService_1.alertService.addAlert(guestInformation, service);
                     this.emit(':ask', 'Ok ' + guestInformation.FName + ' , We can send a ' + service + ' to you in room ' + guestInformation.RoomNumber + '. If you would like anything else, please ask. If not, say done');
-                    doneService = service + 'is';
+                    doneService = service + ' is';
                 }
                 else {
-                    this.emit (':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
-                    SessionState=false;
+                    this.emit(':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.');
+                    SessionState = false;
                 }
             }
             else {
                 this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time.');
-                SessionState=false;
+                SessionState = false;
             }
         });
     },
     'DoneIntent': function () {
         alertService_1.alertService.addAlert(guestInformation, doneService);
-        this.emit(':tell', 'Ok, you will receive a text when your ' + doneService + ' on the way.');
-        SessionState=false; 
-        doneService='';       
+        this.emit(':tell', 'Ok, you will receive a text when your ' + doneService + ' is on the way.');
+        SessionState = false;
+        doneService = '';
     },
     'RequestedPluralServiceIntent': function () {
         let number = this.event.request.intent.slots.requestNumber.value;
         let service = this.event.request.intent.slots.requestedPluralService.value;
-        doneService=service;
+        doneService = service;
         console.info("Service: " + service);
         lookupService_1.lookupService.slotExists(service, "ServiceLookup", slotFound => {
-          if (slotFound) {
-            var intentObj = this.event.request.intent;
-            if (intentObj.slots.requestNumber.confirmationStatus !== 'CONFIRMED') {
-              if (intentObj.slots.requestNumber.confirmationStatus !== 'DENIED') {
-                // Slot value is not confirmed
-                var speechOutput = 'You want ' + intentObj.slots.requestNumber.value + ' ' + service + ', is that correct?';
-                this.emit(':confirmSlot', 'requestNumber', speechOutput, speechOutput);
-              } else {
-                // Users denies the confirmation of slot value
-                var speechOutput = 'Okay, how many would you like?';
-                this.emit(':elicitSlot', 'requestNumber', speechOutput, speechOutput);
-              }
-            }  else {  
-                if (SessionState==false){
-                    let services = number + ' ' + service;
-                    alertService_1.alertService.addAlert(guestInformation, services);
-                    SessionState=true;  
-                    this.emit(':ask', 'Ok. We can send ' + number + service + ' to your room. If you would like anything else, please ask. If not, say done');
-                    doneService=service + 'are';
+            if (slotFound) {
+                var intentObj = this.event.request.intent;
+                if (intentObj.slots.requestNumber.confirmationStatus !== 'CONFIRMED') {
+                    if (intentObj.slots.requestNumber.confirmationStatus !== 'DENIED') {
+                        // Slot value is not confirmed
+                        var speechOutput = 'You want ' + intentObj.slots.requestNumber.value + ' ' + service + ', is that correct?';
+                        this.emit(':confirmSlot', 'requestNumber', speechOutput, speechOutput);
+                    }
+                    else {
+                        // Users denies the confirmation of slot value
+                        var speechOutput = 'Okay, how many would you like?';
+                        this.emit(':elicitSlot', 'requestNumber', speechOutput, speechOutput);
+                    }
                 }
                 else {
-                    let services = number + ' ' + service;
-                    alertService_1.alertService.addAlert(guestInformation, services);                    
-                    this.emit (':tell', 'Ok, we can add ' + number + service + ' to your request. You will receive a text when everything is on its way.')
-                    SessionState=false;
+                    if (SessionState == false) {
+                        SessionState = true;
+                        let services = number + ' ' + service;
+                        alertService_1.alertService.addAlert(guestInformation, services);
+                        this.emit(':ask', 'Ok. We can send ' + number + service + ' to your room. If you would like anything else, please ask. If not, say done');
+                        doneService = service + 'are';
+                    }
+                    else {
+                        let services = number + ' ' + service;
+                        alertService_1.alertService.addAlert(guestInformation, services);
+                        this.emit(':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.');
+                        SessionState = false;
+                    }
                 }
             }
-          }
-          else {
-            this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time. If you would like something else, please ask. If not, say done.', 'Would you like anything else? If not, say done.');
-          }
+            else {
+                this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time. If you would like something else, please ask. If not, say done.', 'Would you like anything else? If not, say done.');
+            }
         });
     },
-    // 'ForgotIntent': function(){
-    //     let number = 0;
-    //     let service = this.event.request.intent.slots.itemNeeded.value;
-    //     doneService=service;
-    //     console.info("Service: " + service);
-    //     lookupService_1.lookupService.slotExists(service, "ServiceLookup", slotFound => {
-    //       if (slotFound) {
-    //         var intentObj = this.event.request.intent;
-    //         if (intentObj.slots.requestNumber.confirmationStatus !== 'CONFIRMED') {
-    //           if (intentObj.slots.requestNumber.confirmationStatus !== 'DENIED') {
-    //             // Slot value is not confirmed
-    //             var speechOutput = 'No problem, we can help you. How many ' + service + 'do you need?';
-    //             this.emit(':confirmSlot', 'requestNumber', speechOutput, speechOutput);
-    //           } else {
-    //             // Users denies the confirmation of slot value
-    //             var speechOutput = 'Im sorry, how many would you like?';
-    //             this.emit(':elicitSlot', 'requestNumber', speechOutput, speechOutput);
-    //           }
-    //         }  else {  
-    //             if (SessionState==false){
-    //                 SessionState=true;  
-    //                 this.emit(':ask', 'Ok. We can send ' + number + service + ' to your room. If you would like anything else, please ask. If not, say done');
-    //                 doneService=service + 'are';
-    //             }
-    //             else {
-    //                 this.emit (':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
-    //                 SessionState=false;
-    //             }
-    //         }
-    //       }
-    //       else {
-    //         this.emit(':tell', 'Sorry ' + guestInformation.FName + ' We do not provide ' + service + ' at this time. If you would like something else, please ask. If not, say done.', 'Would you like anything else? If not, say done.');
-    //       }
-    //     });
-    // },
     'HotelInfoLocationIntent': function () {
         let amenity = this.event.request.intent.slots.amenity.value;
         console.info("Amenity: " + amenity);
@@ -157,12 +121,12 @@ let handlers = {
                     cardContent = "Opening Hour: " + standardTime.openingTime + " Closing Hour: " + standardTime.closingTime;
                     if (hoursRemaining == 0) {
                         console.log("hours remaining" + hoursRemaining);
-                        this.emit(':tell', amenityInfo.Location + '. It is currently closed. The hours are ' + standardTime.openingTime + ' to ' +  standardTime.closingTime);                      
+                        this.emit(':tell', amenityInfo.Location + '. It is currently closed. The hours are ' + standardTime.openingTime + ' to ' + standardTime.closingTime);
                     }
                     else {
-                        this.emit(':tell', amenityInfo.Location + '. It is currently open and will remain open for ' + hoursRemaining + ' more hours. The full hours are ' + standardTime.openingTime + ' to ' + standardTime.closingTime);                        
-                    }  
-                 }); 
+                        this.emit(':tell', amenityInfo.Location + '. It is currently open and will remain open for ' + hoursRemaining + ' more hours. The full hours are ' + standardTime.openingTime + ' to ' + standardTime.closingTime);
+                    }
+                });
             });
         });
     },
@@ -222,7 +186,7 @@ let handlers = {
                         console.log("Guest info: " + guestInformation);
                         let message = "Please send " + food + " to Room " + guestInformation.RoomNumber;
                         foodService_1.foodService.updateRating(foodInfo);
-                         //foodService get price of pairing
+                        //foodService get price of pairing
                         let totalPrice = foodInfo.CombinedPrice;
                         var imageObj = {
                             smallImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg',
@@ -262,17 +226,16 @@ let handlers = {
         this.emit(':tell', 'Your request to extend your stay by ' + days + ' days has been sent in.  You will receive a text when it has been accepted.');
     },
     'CheckOutIntent': function () {
-        console.log("deviceID" + deviceId);
+        console.info("deviceID" + deviceId);
         guestService_1.guestService.checkoutGuest(deviceId, success => {
-            console.log("deviceID" + deviceId);            
+            console.info("deviceID" + deviceId);
             alertService_1.alertService.alertGuest('Thank you for staying with us.', guestInformation.PhoneNumber, null);
             this.emit(':tell', 'You are checked out.  Thank you for staying with us!  Come back soon.');
         });
     },
     'AMAZON.StopIntent': function () {
         // State Automatically Saved with :tell
-        this.emit(':tell', `Goodbye. Thanks for using SuiteService.`);
-        SessionState=false;
+        this.emit(':tell', `Goodbye.`);
     },
     'AMAZON.CancelIntent': function () {
         // State Automatically Saved with :tell
