@@ -6,7 +6,7 @@ let verificationCode = null;
 
 export class MFAService {
 
-    sendVerificationCode(number: String, callback) {
+    sendVerificationCode(number: string, callback) {
         verificationCode = Math.floor(1000 + Math.random() * 9000);
         console.log(verificationCode);
         let message = "Your verification code is " + verificationCode;
@@ -14,11 +14,18 @@ export class MFAService {
             Message: message,
             PhoneNumber: number
         };
-
+        console.info("request " + JSON.stringify(params));
         let request = sns.publish(params);
-        console.info("This is our request:" + JSON.stringify(request));
         request.send(callback);
         return;
+    }
+
+    verifyCode(number: number, callback) {
+        let verified = false;
+        if (number == verificationCode) {
+            verified = true;
+        }
+        callback(verified);
     }
 
     

@@ -78,6 +78,7 @@ functions:
         - lambda/Models/foodModel.js
         - lambda/Models/guestModel.js
         - lambda/Services/lookupService.js
+        - lambda/Services/mfaService.js
         - node_modules/**
 
   getRoom:
