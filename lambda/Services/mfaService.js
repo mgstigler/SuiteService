@@ -1,32 +1,31 @@
 'use strict';
-exports.__esModule = true;
-var AWS = require("aws-sdk");
-var sns = new AWS.SNS();
-var verificationCode = null;
-var MFAService = (function () {
-    function MFAService() {
-    }
-    MFAService.prototype.sendVerificationCode = function (number, callback) {
-        verificationCode = Math.floor(1000 + Math.random() * 9000);
+Object.defineProperty(exports, "__esModule", { value: true });
+const AWS = require("aws-sdk");
+let sns = new AWS.SNS();
+class MFAService {
+    sendVerificationCode(number, callback) {
+        let verificationCode = Math.floor(1000 + Math.random() * 9000);
         console.log(verificationCode);
-        var message = "Your verification code is " + verificationCode;
-        var params = {
+        let message = "Your verification code is " + verificationCode;
+        let params = {
             Message: message,
             PhoneNumber: number
         };
         console.info("request " + JSON.stringify(params));
-        var request = sns.publish(params);
-        request.send(callback);
-        return;
-    };
-    MFAService.prototype.verifyCode = function (number, callback) {
-        var verified = false;
-        if (number == verificationCode) {
+        let request = sns.publish(params);
+        request.send();
+        callback(verificationCode);
+    }
+    verifyCode(number, verifiedCode, callback) {
+        let verified = false;
+        if (number == verifiedCode) {
             verified = true;
         }
         callback(verified);
-    };
-    return MFAService;
-}());
+    }
+    createMfaResponse() {
+    }
+}
 exports.MFAService = MFAService;
 exports.mfaService = new MFAService();
+//# sourceMappingURL=mfaService.js.map

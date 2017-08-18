@@ -1,13 +1,13 @@
 'use strict'
 
 import * as AWS from 'aws-sdk';
+import {mfaModel} from "../Models/mfaModel";
 let sns = new AWS.SNS();
-let verificationCode = null;
 
 export class MFAService {
 
     sendVerificationCode(number: string, callback) {
-        verificationCode = Math.floor(1000 + Math.random() * 9000);
+        let verificationCode = Math.floor(1000 + Math.random() * 9000);
         console.log(verificationCode);
         let message = "Your verification code is " + verificationCode;
         let params = {
@@ -16,19 +16,17 @@ export class MFAService {
         };
         console.info("request " + JSON.stringify(params));
         let request = sns.publish(params);
-        request.send(callback);
-        return;
+        request.send();
+        callback(verificationCode);
     }
 
-    verifyCode(number: number, callback) {
+    verifyCode(number: number, verifiedCode: number, callback) {
         let verified = false;
-        if (number == verificationCode) {
+        if (number == verifiedCode) {
             verified = true;
         }
         callback(verified);
     }
-
-    
 
 }
 

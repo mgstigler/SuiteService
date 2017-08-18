@@ -14,9 +14,16 @@ let cardContent = '';
 let SessionState = false;
 let bucketPath = "https://s3.amazonaws.com/food-menu-images/";
 let amenitiesBucketPath = "https://s3.amazonaws.com/amenities-images/";
-
 let sessionState = false;
 let doneService ='';
+let mfaObject = {
+    Code: null,
+    CardTitle: null,
+    CardContent: null,
+    Service: null,
+    ImageObject: null,
+    SpeechOutput: null
+};
 
 module.exports.SuiteService = (event, context, callback) => {
     let alexa = Alexa.handler(event, context, callback);
@@ -42,7 +49,6 @@ let handlers = {
     'RequestSingularServiceIntent': function () {
         let service = this.event.request.intent.slots.requestedSingularService.value;
         console.info("Service: " + service);
-        let message = "Please send " + service + " to Laura.";
         lookupService_1.lookupService.slotExists(service, "ServiceLookup", slotFound => {
             if (slotFound) {
                 if (SessionState==false){
@@ -171,24 +177,28 @@ let handlers = {
                         }
                         else {
                             // guest says no nothing else
-                            let message = "Please send " + food + " to Room " + guestInformation.RoomNumber;
-                            foodService_1.foodService.updateRating(foodInfo);
                             var imageObj = {
                                 smallImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg',
                                 largeImageUrl: bucketPath + JSON.stringify(foodInfo.Index) + '.jpg'
                             };
                             cardTitle = JSON.stringify(foodInfo.FoodItem);
                             cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) + " Price: $" + foodInfo.Price;
-                            alertService_1.alertService.addAlert(guestInformation, food);
-                            mfaService_1.mfaService.sendVerificationCode(guestInformation.PhoneNumber, null);
-                            this.emit(':tellWithCard', 'Ok, no problem. We will send ' + food + ' to room ' + guestInformation.RoomNumber + ' right away. That will be ' + foodInfo.Price + ' dollars. You will get a text when your order is on the way', cardTitle, cardContent, imageObj);
+                            mfaService_1.mfaService.sendVerificationCode(guestInformation.PhoneNumber, code => {
+                                mfaObject = {
+                                    Code: code,
+                                    CardTitle: cardTitle,
+                                    CardContent: cardContent,
+                                    Service: food,
+                                    ImageObject: imageObj,
+                                    SpeechOutput: 'Ok, no problem. We will send ' + food + ' to room ' + guestInformation.RoomNumber + ' right away. That will be ' + foodInfo.Price + ' dollars. You will get a text when your order is on the way'
+                                };
+                                this.emit(':ask', 'Please say verify followed by the four digit code you received to confirm and place your order.');
+                            });
                         }
                     }
                     else {
                         //guest says yes to pairing
                         console.log("Guest info: " + guestInformation);
-                        let message = "Please send " + food + " to Room " + guestInformation.RoomNumber;
-                        foodService_1.foodService.updateRating(foodInfo);
                          //foodService get price of pairing
                         let totalPrice = foodInfo.CombinedPrice;
                         var imageObj = {
@@ -198,10 +208,17 @@ let handlers = {
                         cardTitle = 'Ordering ' + food + ' and ' + JSON.stringify(foodInfo.Pairing);
                         cardContent = "Rating: " + JSON.stringify(foodInfo.Rating) + " Total Price: $" + totalPrice;
                         let combinedFood = food + ' and ' + foodInfo.Pairing;
-                        console.log("food price combined:" + combinedFood);
-                        alertService_1.alertService.addAlert(guestInformation, combinedFood);
-                        mfaService_1.mfaService.sendVerificationCode(guestInformation.PhoneNumber, null);
-                        this.emit(':tellWithCard', 'Great, We will submit your order for ' + combinedFood + '. The total cost is ' + totalPrice + ' dollars. You will get a text when the order is on the way.', cardTitle, cardContent, imageObj);
+                        mfaService_1.mfaService.sendVerificationCode(guestInformation.PhoneNumber, code => {
+                            mfaObject = {
+                                Code: code,
+                                CardTitle: cardTitle,
+                                CardContent: cardContent,
+                                Service: combinedFood,
+                                ImageObject: imageObj,
+                                SpeechOutput: 'Great, We will submit your order for ' + combinedFood + '. The total cost is ' + totalPrice + ' dollars. You will get a text when the order is on the way.'
+                            };
+                            this.emit(':ask', 'Please say verify followed by the four digit code you received to confirm and place your order.');
+                        });
                     }
                 });
             }
@@ -236,6 +253,18 @@ let handlers = {
             alertService_1.alertService.alertGuest('Thank you for staying with us.', guestInformation.PhoneNumber, null);
             this.emit(':tell', 'You are checked out.  Thank you for staying with us!  Come back soon.');
         });
+    },
+    'VerifyIntent': function() {
+        let code = this.event.request.intent.slots.verifyCode.value;
+            mfaService_1.mfaService.verifyCode(code, mfaObject.Code, verified => {
+                if (verified){
+                    alertService_1.alertService.addAlert(guestInformation, mfaObject.Service);
+                    this.emit(':tell', mfaObject.speechOutput, mfaObject.CardTitle, mfaObject.cardContent, mfaObject.ImageObject);
+                }
+                else {
+                    this.emit(':tell', 'Sorry, we cannot verify your code at this time.  Please call the front desk for assistance.');
+                }
+            });
     },
     'AMAZON.StopIntent': function () {
         // State Automatically Saved with :tell
