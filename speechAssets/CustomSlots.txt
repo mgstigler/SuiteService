@@ -78,3 +78,15 @@ bottles of Conditioner
 things of Conditioner
 conditioners
 containers of conditioner
+
+rating: 
+one star
+two stars
+three stars
+four stars
+five stars
+one 
+two
+three
+four
+five

@@ -1,7 +1,7 @@
 'use strict';
 import * as AWS from "aws-sdk";
 import {foodModel} from "../Models/foodModel";
-let docClient = new AWS.DynamoDB.DocumentClient()
+let docClient = new AWS.DynamoDB.DocumentClient();
 
 export class FoodService {
     getFoodInformation(foodItem: string, callback) {
@@ -32,14 +32,6 @@ export class FoodService {
             }
         });
 
-    }
-
-    getFoodPrice(foodItem: string, callback) {
-        let price = 0;
-        this.getFoodInformation(foodItem, foodinfo => {
-            price = foodinfo.Price;
-            callback(price);
-        });
     }
 
     updateRating(foodItem: foodModel) {
@@ -114,8 +106,7 @@ export class FoodService {
                 data.Items.forEach(function(item) {
                     if(item.Menu.values.includes(menu1) || item.Menu.values.includes(menu2) || item.Menu.values.includes(menu3)) {
                         console.info(JSON.stringify(item.FoodItem));
-                        let foodInfo = item.FoodItem + ': $' + item.Price;
-                        response.push(foodInfo);
+                        response.push(item.FoodItem);
                     }
                 });
                 console.info(response);

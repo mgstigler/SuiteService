@@ -45,13 +45,14 @@ class GuestService {
             Key: {
                 "AlexaId": deviceId
             },
-            UpdateExpression: "set FName = :f, LName = :l, CheckIn = :i, CheckOut = :o, PhoneNumber = :p",
+            UpdateExpression: "set FName = :f, LName = :l, CheckIn = :i, CheckOut = :o, PhoneNumber = :p, RoomStatus = :rs",
             ExpressionAttributeValues: {
                 ":f": null,
                 ":l": null,
                 ":p": null,
                 ":o": null,
-                ":i": null
+                ":i": null,
+                ":rs": 'notReady'
             },
             ReturnValues: "UPDATED_NEW"
         };
@@ -66,7 +67,33 @@ class GuestService {
             }
         });
     }
+    updateRoomStatus(deviceId, phoneNumber, callback) {
+        var docClient = new AWS.DynamoDB.DocumentClient();
+        var params = {
+            TableName: "Guests",
+            Key: {
+                "AlexaId": deviceId
+            },
+            UpdateExpression: "set RoomStatus = :rs",
+            ExpressionAttributeValues: {
+                ":rs": 'Clean', 
+            },
+            ReturnValues: "UPDATED_NEW"
+        };
+        console.log("Updating the item...");
+        docClient.update(params, function (err, data) {
+            if (err) {
+                console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
+            }
+            else {
+                console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+                callback (null);
+            }
+        });
+        
+    }
 }
+    
 exports.GuestService = GuestService;
 exports.guestService = new GuestService();
 //# sourceMappingURL=guestService.js.map

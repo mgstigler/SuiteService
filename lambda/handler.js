@@ -22,8 +22,8 @@ module.exports.SuiteService = (event, context, callback) => {
     console.info(JSON.stringify(event));
     // alexa.appId = "amzn1.ask.skill.fabfb036-f98c-4273-80e2-508422489244";
     // Uncomment below when testing with an actual device
-    // deviceId = event.context.System.device.deviceId;
-    deviceId = "amzn1.ask.device.AHDZ6YTAZ5XFXJFIR6JGJ54OFQ7PJMFOFWH6YYGCKGU4IZHC73I76XKPBSWBNFOUMKE3ZLV5MMIDPDBDV5O5UZDBWOTWNFDKSVTDN7RBDHE7SAHLXPHHQSQK2FAAECUJJMK7F4NOHD6VF2TNC5XNNM2FJB5A";
+    deviceId = event.context.System.device.deviceId;
+    // deviceId = "amzn1.ask.device.AHDZ6YTAZ5XFXJFIR6JGJ54OFQ7PJMFOFWH6YYGCKGU4IZHC73I76XKPBSWBNFOUMKE3ZLV5MMIDPDBDV5O5UZDBWOTWNFDKSVTDN7RBDHE7SAHLXPHHQSQK2FAAECUJJMK7F4NOHD6VF2TNC5XNNM2FJB5A";
     console.info(deviceId);
     guestService_1.guestService.getGuestInformation(deviceId, guestInfo => {
         guestInformation = guestInfo;
@@ -51,6 +51,7 @@ let handlers = {
                     doneService = service + 'is';
                 }
                 else {
+                    alertService_1.alertService.addAlert(guestInformation, service);
                     this.emit (':tell', 'Sure, we can add ' + service + ' to your request. You will receive a text when everything is on its way.')
                     SessionState=false;
                 }
@@ -62,7 +63,6 @@ let handlers = {
         });
     },
     'DoneIntent': function () {
-        alertService_1.alertService.addAlert(guestInformation, doneService);
         this.emit(':tell', 'Ok, you will receive a text when your ' + doneService + ' on the way.');
         SessionState=false; 
         doneService='';       
@@ -266,9 +266,17 @@ let handlers = {
         guestService_1.guestService.checkoutGuest(deviceId, success => {
             console.log("deviceID" + deviceId);            
             alertService_1.alertService.alertGuest('Thank you for staying with us.', guestInformation.PhoneNumber, null);
-            this.emit(':tell', 'You are checked out.  Thank you for staying with us!  Come back soon.');
+            this.emit(':ask', 'You are checked out, thank you for staying with us!  How would you rate your stay? Say anything from 1 star to 5 stars.', 'If you enjoyed your stay, say 5 stars. If not, choose a lower rating.');
         });
     },
+   'MaintenanceIntent': function(){
+        // Update RoomStatus in DB
+        alertService_1.alertService.alertGuest('Room number ' + guestInformation.RoomNumber + ' is now clean and ready for you to use.', guestInformation.PhoneNumber, null);
+        guestService_1.guestService.updateRoomStatus(deviceId, success => {
+        this.emit(':tell', 'Thank you, we will alert the front desk.');
+        });
+    },
+
     'AMAZON.StopIntent': function () {
         // State Automatically Saved with :tell
         this.emit(':tell', `Goodbye. Thanks for using SuiteService.`);
