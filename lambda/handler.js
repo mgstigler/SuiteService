@@ -273,7 +273,7 @@ let handlers = {
         // Update RoomStatus in DB
         alertService_1.alertService.alertGuest('Room number ' + guestInformation.RoomNumber + ' is now clean and ready for you to use.', guestInformation.PhoneNumber, null);
         guestService_1.guestService.updateRoomStatus(deviceId, success => {
-        this.emit(':tell', 'Thank you, we will alert the front desk.');
+        this.emit(':tell', 'Thank you, we appreciate your work and will alert the front desk.');
         });
     },
 

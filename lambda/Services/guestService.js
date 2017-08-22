@@ -76,7 +76,7 @@ class GuestService {
             },
             UpdateExpression: "set RoomStatus = :rs",
             ExpressionAttributeValues: {
-                ":rs": 'Clean', 
+                ":rs": "Clean", 
             },
             ReturnValues: "UPDATED_NEW"
         };
