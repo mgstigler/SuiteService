@@ -67,7 +67,7 @@ class GuestService {
             }
         });
     }
-    updateRoomStatus(deviceId, phoneNumber, callback) {
+    updateRoomStatus(deviceId, callback) {
         var docClient = new AWS.DynamoDB.DocumentClient();
         var params = {
             TableName: "Guests",

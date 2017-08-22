@@ -52,7 +52,7 @@ DoneIntent finished
 DoneIntent I dont want anything else
 DoneIntent nothing else
 
-CleanIntent the room is clean 
-CleanIntent the room is now clean 
-CleanIntent I have cleaned the room
-CleanIntent The room is ready for the next guest 
+MaintenanceIntent the room is clean 
+MaintenanceIntent the room is now clean 
+MaintenanceIntent I have cleaned the room
+MaintenanceIntent The room is ready for the next guest 
